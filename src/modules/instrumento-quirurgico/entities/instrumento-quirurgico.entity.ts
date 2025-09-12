@@ -24,14 +24,18 @@ export class InstrumentoQuirurgico {
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   precioUnitario: number;
 
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  precioVenta: number;
+
   @Column('int', { default: 0 })
   cantidadStock: number;
+
+  @Column('int', { default: 0 })
+  cantidadStockMinima: number;
 
   @Column({ type: 'date', nullable: true })
   fechaAdquisicion: Date;
 
-  // Relación Many-to-One con CategoriaInstrumento
-  // Un instrumento pertenece a una categoría.
   @ManyToOne(
     () => CategoriaInstrumento,
     (categoria) => categoria.instrumentos,

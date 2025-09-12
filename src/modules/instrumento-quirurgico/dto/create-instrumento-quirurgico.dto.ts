@@ -22,6 +22,19 @@ export class CreateInstrumentoQuirurgicoDto {
   @Type(() => Number) // Asegura que el valor se transforme a número
   precioUnitario: number;
 
+  @IsNumber({}, { message: 'El precio de venta debe ser un número.' })
+  @Min(0, { message: 'El precio de venta no puede ser negativo.' })
+  @Type(() => Number)
+  precioVenta: number;
+
+  @IsNumber(
+    {},
+    { message: 'La cantidad mínima en stock debe ser un número entero.' },
+  )
+  @Min(0, { message: 'La cantidad mínima en stock no puede ser negativa.' })
+  @Type(() => Number)
+  cantidadStockMinima: number;
+
   @IsNumber({}, { message: 'La cantidad en stock debe ser un número entero.' })
   @Min(0, { message: 'La cantidad en stock no puede ser negativa.' })
   @Type(() => Number)
