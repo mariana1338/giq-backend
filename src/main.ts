@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter'; // Importa el filtro de excepciones
-import { TransformInterceptor } from './common/interceptors/transform.interceptor'; // Importa el interceptor
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,14 +20,12 @@ async function bootstrap() {
   );
 
   // Registrar filtros e interceptores globales
-  // No hay "unsafe construction" si los módulos se encuentran y son válidos.
-
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  // Habilitar CORS si tu frontend (ej. React, Angular, Vue) estará en un dominio diferente
+  // Habilitar CORS si tu frontend estará en un dominio diferente
   app.enableCors({
-    origin: '*', // O especifica tus dominios: ['http://localhost:4200', 'https://tu-dominio.com']
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -36,5 +34,5 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`La aplicación está corriendo en: ${await app.getUrl()}`);
 }
-// Llamada a bootstrap(). El error de promesa se resuelve con el 'await' dentro de la función.
-bootstrap();
+// Llamada a bootstrap()
+void bootstrap();

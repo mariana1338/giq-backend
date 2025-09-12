@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InstrumentoQuirurgico } from './entities/instrumento-quirurgico.entity';
@@ -7,6 +12,8 @@ import { UpdateInstrumentoQuirurgicoDto } from './dto/update-instrumento-quirurg
 import { CategoriaInstrumento } from '../categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from '../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../ubicacion-almacen/entities/ubicacion-almacen.entity';
+import { NotificacionService } from '../notificacion/notificacion.service';
+import { Usuario } from '../usuario/entities/usuario.entity';
 
 // Función de guarda de tipo para verificar si el error tiene una propiedad 'code' (como los errores de DB)
 function isDatabaseError(error: any): error is { code: string } {
@@ -17,13 +24,16 @@ function isDatabaseError(error: any): error is { code: string } {
 export class InstrumentoQuirurgicoService {
   constructor(
     @InjectRepository(InstrumentoQuirurgico)
-    private readonly instrumentoQuirurgicoRepository: Repository<InstrumentoQuirurgico>,
+    private readonly instrumentoRepository: Repository<InstrumentoQuirurgico>,
     @InjectRepository(CategoriaInstrumento)
     private readonly categoriaRepository: Repository<CategoriaInstrumento>,
     @InjectRepository(Proveedor)
     private readonly proveedorRepository: Repository<Proveedor>,
     @InjectRepository(UbicacionAlmacen)
     private readonly ubicacionRepository: Repository<UbicacionAlmacen>,
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+    private readonly notificacionService: NotificacionService,
   ) {}
 
   async create(
@@ -32,10 +42,8 @@ export class InstrumentoQuirurgicoService {
     const { categoriaId, proveedorId, ubicacionId, ...instrumentoData } =
       createInstrumentoQuirurgicoDto;
 
-    const newInstrumento =
-      this.instrumentoQuirurgicoRepository.create(instrumentoData);
+    const newInstrumento = this.instrumentoRepository.create(instrumentoData);
 
-    // Manejo de relaciones: busca y asigna las entidades relacionadas
     if (categoriaId) {
       const categoria = await this.categoriaRepository.findOneBy({
         id: categoriaId,
@@ -76,17 +84,14 @@ export class InstrumentoQuirurgicoService {
     }
 
     try {
-      return await this.instrumentoQuirurgicoRepository.save(newInstrumento);
+      return await this.instrumentoRepository.save(newInstrumento);
     } catch (error: unknown) {
-      // Se tipa 'error' como 'unknown'
-      // Se usa la guarda de tipo para verificar si es un error de base de datos con 'code'
       if (isDatabaseError(error) && error.code === 'ER_DUP_ENTRY') {
         throw new HttpException(
           'Ya existe un instrumento con este nombre o código.',
           HttpStatus.CONFLICT,
         );
       }
-      // Para otros errores, lanza un error genérico 500
       throw new HttpException(
         'Error interno del servidor al crear el instrumento.',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -95,13 +100,12 @@ export class InstrumentoQuirurgicoService {
   }
 
   async findAll(): Promise<InstrumentoQuirurgico[]> {
-    // `find()` con `eager: true` en las relaciones carga las entidades relacionadas automáticamente.
-    return await this.instrumentoQuirurgicoRepository.find();
+    return await this.instrumentoRepository.find();
   }
 
   async findOne(id: number): Promise<InstrumentoQuirurgico> {
-    const instrumento = await this.instrumentoQuirurgicoRepository.findOneBy({
-      id,
+    const instrumento = await this.instrumentoRepository.findOne({
+      where: { id_instrumento: id },
     });
     if (!instrumento) {
       throw new HttpException(
@@ -116,100 +120,44 @@ export class InstrumentoQuirurgicoService {
     id: number,
     updateInstrumentoQuirurgicoDto: UpdateInstrumentoQuirurgicoDto,
   ): Promise<InstrumentoQuirurgico> {
-    const instrumentoToUpdate =
-      await this.instrumentoQuirurgicoRepository.findOneBy({
-        id,
+    const instrumento = await this.instrumentoRepository.findOne({
+      where: { id_instrumento: id },
+    });
+    if (!instrumento) {
+      throw new NotFoundException(
+        `Instrumento Quirurgico con ID '${id}' no encontrado.`,
+      );
+    }
+
+    if (
+      updateInstrumentoQuirurgicoDto.cantidadStock !== undefined &&
+      updateInstrumentoQuirurgicoDto.cantidadStock <= instrumento.stockMinimo
+    ) {
+      const mensaje = `¡Alerta de Stock Bajo! El instrumento ${instrumento.nombre} tiene solo ${updateInstrumentoQuirurgicoDto.cantidadStock} unidades.`;
+
+      const usuarioAdmin = await this.usuarioRepository.findOne({
+        where: { rol: 'admin' },
       });
 
-    if (!instrumentoToUpdate) {
-      throw new HttpException(
-        `Instrumento con ID ${id} no encontrado para actualizar.`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const { categoriaId, proveedorId, ubicacionId, ...updateData } =
-      updateInstrumentoQuirurgicoDto;
-
-    // Actualiza las propiedades básicas del instrumento
-    Object.assign(instrumentoToUpdate, updateData);
-
-    // Actualiza las relaciones si se proporcionan los IDs
-    if (categoriaId !== undefined) {
-      if (categoriaId === null) {
-        instrumentoToUpdate.categoria = null; // Desasocia la categoría (establece FK a NULL)
-      } else {
-        const categoria = await this.categoriaRepository.findOneBy({
-          id: categoriaId,
+      if (usuarioAdmin) {
+        await this.notificacionService.crearNotificacion({
+          mensaje: mensaje,
+          id_usuario: usuarioAdmin.id_usuario,
+          id_instrumento: instrumento.id_instrumento,
         });
-        if (!categoria) {
-          throw new HttpException(
-            `Categoría con ID ${categoriaId} no encontrada.`,
-            HttpStatus.NOT_FOUND,
-          );
-        }
-        instrumentoToUpdate.categoria = categoria;
       }
     }
 
-    if (proveedorId !== undefined) {
-      if (proveedorId === null) {
-        instrumentoToUpdate.proveedor = null; // Desasocia el proveedor
-      } else {
-        const proveedor = await this.proveedorRepository.findOneBy({
-          id: proveedorId,
-        });
-        if (!proveedor) {
-          throw new HttpException(
-            `Proveedor con ID ${proveedorId} no encontrado.`,
-            HttpStatus.NOT_FOUND,
-          );
-        }
-        instrumentoToUpdate.proveedor = proveedor;
-      }
-    }
-
-    if (ubicacionId !== undefined) {
-      if (ubicacionId === null) {
-        instrumentoToUpdate.ubicacion = null; // Desasocia la ubicación
-      } else {
-        const ubicacion = await this.ubicacionRepository.findOneBy({
-          id: ubicacionId,
-        });
-        if (!ubicacion) {
-          throw new HttpException(
-            `Ubicación con ID ${ubicacionId} no encontrada.`,
-            HttpStatus.NOT_FOUND,
-          );
-        }
-        instrumentoToUpdate.ubicacion = ubicacion;
-      }
-    }
-
-    try {
-      return await this.instrumentoQuirurgicoRepository.save(
-        instrumentoToUpdate,
-      );
-    } catch (error: unknown) {
-      // Se tipa 'error' como 'unknown'
-      // Se usa la guarda de tipo para verificar si es un error de base de datos con 'code'
-      if (isDatabaseError(error) && error.code === 'ER_DUP_ENTRY') {
-        throw new HttpException(
-          'Ya existe un instrumento con este nombre.',
-          HttpStatus.CONFLICT,
-        );
-      }
-      throw new HttpException(
-        'Error interno del servidor al actualizar el instrumento.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    this.instrumentoRepository.merge(
+      instrumento,
+      updateInstrumentoQuirurgicoDto,
+    );
+    return await this.instrumentoRepository.save(instrumento);
   }
 
   async remove(id: number): Promise<boolean> {
-    const result = await this.instrumentoQuirurgicoRepository.delete(id);
+    const result = await this.instrumentoRepository.delete(id);
     if (result.affected === 0) {
-      // Si `affected` es 0, significa que no se encontró ni eliminó ninguna fila.
       throw new HttpException(
         `Instrumento con ID ${id} no encontrado para eliminar.`,
         HttpStatus.NOT_FOUND,

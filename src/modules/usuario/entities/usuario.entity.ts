@@ -1,11 +1,12 @@
-// src/modules/usuario/entities/usuario.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany, // Importa OneToMany
 } from 'typeorm';
+import { Notificacion } from '../../notificacion/entities/notificacion.entity'; // Importa la entidad Notificacion
 
 @Entity('usuarios')
 export class Usuario {
@@ -32,4 +33,8 @@ export class Usuario {
 
   @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
+
+  // Relación Uno a Muchos con Notificacion
+  @OneToMany(() => Notificacion, (notificacion) => notificacion.usuario)
+  notificaciones: Notificacion[];
 }

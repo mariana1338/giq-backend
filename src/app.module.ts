@@ -3,27 +3,28 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-// Importa todos tus módulos y entidades aquí
+// Importa los módulos
+import { UsuarioModule } from './modules/usuario/usuario.module';
 import { InstrumentoQuirurgicoModule } from './modules/instrumento-quirurgico/instrumento-quirurgico.module';
-import { CategoriaInstrumentoModule } from './modules/categoria-instrumento/categoria-instrumento.module';
 import { ProveedorModule } from './modules/proveedor/proveedor.module';
 import { UbicacionAlmacenModule } from './modules/ubicacion-almacen/ubicacion-almacen.module';
-import { UsuarioModule } from './modules/usuario/usuario.module';
+import { CategoriaInstrumentoModule } from './modules/categoria-instrumento/categoria-instrumento.module';
+import { NotificacionModule } from './modules/notificacion/notificacion.module';
 
+// Importa todas las entidades
+import { Usuario } from './modules/usuario/entities/usuario.entity';
 import { InstrumentoQuirurgico } from './modules/instrumento-quirurgico/entities/instrumento-quirurgico.entity';
-import { CategoriaInstrumento } from './modules/categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from './modules/proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from './modules/ubicacion-almacen/entities/ubicacion-almacen.entity';
-import { Usuario } from './modules/usuario/entities/usuario.entity';
+import { CategoriaInstrumento } from './modules/categoria-instrumento/entities/categoria-instrumento.entity';
+import { Notificacion } from './modules/notificacion/entities/notificacion.entity';
 
 @Module({
   imports: [
-    // Configura ConfigModule para cargar variables de entorno desde .env
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
-    // Configura TypeOrmModule para la conexión a la base de datos MySQL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -34,23 +35,25 @@ import { Usuario } from './modules/usuario/entities/usuario.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [
+          // Añade todas las entidades aquí
+          Usuario,
           InstrumentoQuirurgico,
-          CategoriaInstrumento,
           Proveedor,
           UbicacionAlmacen,
-          Usuario,
+          CategoriaInstrumento,
+          Notificacion,
         ],
         synchronize: true,
         logging: false,
       }),
       inject: [ConfigService],
     }),
-    // Importa todos los módulos de tus entidades aquí
+    UsuarioModule,
     InstrumentoQuirurgicoModule,
-    CategoriaInstrumentoModule,
     ProveedorModule,
     UbicacionAlmacenModule,
-    UsuarioModule,
+    CategoriaInstrumentoModule,
+    NotificacionModule,
   ],
 })
 export class AppModule {}

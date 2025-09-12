@@ -5,15 +5,17 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany, // Importa OneToMany
 } from 'typeorm';
 import { CategoriaInstrumento } from '../../categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from '../../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../../ubicacion-almacen/entities/ubicacion-almacen.entity';
+import { Notificacion } from '../../notificacion/entities/notificacion.entity'; // Importa la entidad Notificacion
 
 @Entity('instrumentos_quirurgicos')
 export class InstrumentoQuirurgico {
   @PrimaryGeneratedColumn()
-  id: number;
+  id_instrumento: number;
 
   @Column({ unique: true, length: 150 })
   nombre: string;
@@ -30,8 +32,9 @@ export class InstrumentoQuirurgico {
   @Column('int', { default: 0 })
   cantidadStock: number;
 
+  // Campo actualizado
   @Column('int', { default: 0 })
-  cantidadStockMinima: number;
+  stockMinimo: number;
 
   @Column({ type: 'date', nullable: true })
   fechaAdquisicion: Date;
@@ -45,14 +48,11 @@ export class InstrumentoQuirurgico {
   categoria: CategoriaInstrumento | null;
 
   @Column({ nullable: true })
-  categoriaId: number | null; // También es buena práctica indicar que el ID puede ser null
+  categoriaId: number | null;
 
-  // Relación Many-to-One con Proveedor
-  // Un instrumento es suministrado por un proveedor.
   @ManyToOne(
     () => Proveedor,
-
-    (proveedor: Proveedor) => proveedor.instrumentos, // ¡CORRECCIÓN AQUÍ! Tipado explícito de 'proveedor'
+    (proveedor: Proveedor) => proveedor.instrumentos,
     {
       eager: true,
       onDelete: 'SET NULL',
@@ -62,14 +62,11 @@ export class InstrumentoQuirurgico {
   proveedor: Proveedor | null;
 
   @Column({ nullable: true })
-  proveedorId: number | null; // También es buena práctica indicar que el ID puede ser null
+  proveedorId: number | null;
 
-  // Relación Many-to-One con UbicacionAlmacen
-  // Un instrumento se encuentra en una ubicación de almacén.
   @ManyToOne(
     () => UbicacionAlmacen,
-
-    (ubicacion: UbicacionAlmacen) => ubicacion.instrumentos, // ¡CORRECCIÓN AQUÍ! Tipado explícito de 'ubicacion'
+    (ubicacion: UbicacionAlmacen) => ubicacion.instrumentos,
     {
       eager: true,
       onDelete: 'SET NULL',
@@ -79,5 +76,9 @@ export class InstrumentoQuirurgico {
   ubicacion: UbicacionAlmacen | null;
 
   @Column({ nullable: true })
-  ubicacionId: number | null; // También es buena práctica indicar que el ID puede ser null
+  ubicacionId: number | null;
+
+  // Relación con Notificacion
+  @OneToMany(() => Notificacion, (notificacion) => notificacion.instrumento)
+  notificaciones: Notificacion[];
 }
