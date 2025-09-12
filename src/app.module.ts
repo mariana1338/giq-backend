@@ -1,3 +1,4 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,7 +14,7 @@ import { InstrumentoQuirurgico } from './modules/instrumento-quirurgico/entities
 import { CategoriaInstrumento } from './modules/categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from './modules/proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from './modules/ubicacion-almacen/entities/ubicacion-almacen.entity';
-import { Usuario } from './modules/usuario/entities/usuario.entity'; // <-- ¡Importa la entidad Usuario!
+import { Usuario } from './modules/usuario/entities/usuario.entity';
 
 @Module({
   imports: [
@@ -33,12 +34,11 @@ import { Usuario } from './modules/usuario/entities/usuario.entity'; // <-- ¡Im
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [
-          // ¡Asegúrate de listar TODAS tus entidades aquí para que TypeORM las reconozca!
           InstrumentoQuirurgico,
           CategoriaInstrumento,
           Proveedor,
           UbicacionAlmacen,
-          Usuario, // <-- ¡Agrega la entidad Usuario aquí!
+          Usuario,
         ],
         synchronize: true,
         logging: false,

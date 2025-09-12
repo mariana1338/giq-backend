@@ -1,3 +1,4 @@
+// src/modules/usuario/usuario.controller.ts
 import {
   Controller,
   Get,
@@ -8,6 +9,7 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -32,14 +34,14 @@ export class UsuarioController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id') id: string): Promise<Usuario> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Usuario> {
     return this.usuarioService.findOne(id);
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateUsuarioDto: UpdateUsuarioDto,
   ): Promise<Usuario> {
     return this.usuarioService.update(id, updateUsuarioDto);
@@ -47,7 +49,7 @@ export class UsuarioController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.usuarioService.remove(id);
   }
 }

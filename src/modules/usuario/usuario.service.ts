@@ -1,3 +1,4 @@
+// src/modules/usuario/usuario.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -22,20 +23,17 @@ export class UsuarioService {
       const existingUser = await this.usuarioRepository.findOne({
         where: { correo: createUsuarioDto.correo },
       });
-
       if (existingUser) {
         throw new ConflictException(
-          `El correo electrónico '${createUsuarioDto.correo}' ya está registrado.`,
+          `El correo electrónico '${createUsuarioDto.correo}' ya está en uso.`,
         );
       }
-
-      const nuevoUsuario = this.usuarioRepository.create(createUsuarioDto);
-      return await this.usuarioRepository.save(nuevoUsuario);
+      const newUsuario = this.usuarioRepository.create(createUsuarioDto);
+      return await this.usuarioRepository.save(newUsuario);
     } catch (error) {
       if (error instanceof ConflictException) {
         throw error;
       }
-      console.error('Error al crear usuario:', error);
       throw new InternalServerErrorException(
         'Ocurrió un error inesperado al crear el usuario.',
       );
@@ -43,17 +41,10 @@ export class UsuarioService {
   }
 
   async findAll(): Promise<Usuario[]> {
-    try {
-      return await this.usuarioRepository.find();
-    } catch (error) {
-      console.error('Error al obtener todos los usuarios:', error);
-      throw new InternalServerErrorException(
-        'Ocurrió un error inesperado al obtener los usuarios.',
-      );
-    }
+    return this.usuarioRepository.find();
   }
 
-  async findOne(id_usuario: string): Promise<Usuario> {
+  async findOne(id_usuario: number): Promise<Usuario> {
     const usuario = await this.usuarioRepository.findOne({
       where: { id_usuario },
     });
@@ -66,7 +57,7 @@ export class UsuarioService {
   }
 
   async update(
-    id_usuario: string,
+    id_usuario: number,
     updateUsuarioDto: UpdateUsuarioDto,
   ): Promise<Usuario> {
     try {
@@ -81,7 +72,7 @@ export class UsuarioService {
         });
         if (
           existingUserWithNewEmail &&
-          existingUserWithNewEmail.id_usuario !== id_usuario
+          existingUserWithNewEmail.id_usuario !== usuario.id_usuario
         ) {
           throw new ConflictException(
             `El correo electrónico '${updateUsuarioDto.correo}' ya está en uso por otro usuario.`,
@@ -105,7 +96,7 @@ export class UsuarioService {
     }
   }
 
-  async remove(id_usuario: string): Promise<void> {
+  async remove(id_usuario: number): Promise<void> {
     const result = await this.usuarioRepository.delete(id_usuario);
     if (result.affected === 0) {
       throw new NotFoundException(
