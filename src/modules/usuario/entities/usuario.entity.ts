@@ -4,9 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany, // Importa OneToMany
+  OneToMany,
 } from 'typeorm';
-import { Notificacion } from '../../notificacion/entities/notificacion.entity'; // Importa la entidad Notificacion
+import { Notificacion } from '../../notificacion/entities/notificacion.entity';
+import { Venta } from '../../venta/entities/venta.entity'; // Importa la entidad Venta
 
 @Entity('usuarios')
 export class Usuario {
@@ -37,4 +38,8 @@ export class Usuario {
   // Relación Uno a Muchos con Notificacion
   @OneToMany(() => Notificacion, (notificacion) => notificacion.usuario)
   notificaciones: Notificacion[];
+
+  // Nueva relación Uno a Muchos con Venta
+  @OneToMany(() => Venta, (venta) => venta.usuario)
+  ventas: Venta[];
 }

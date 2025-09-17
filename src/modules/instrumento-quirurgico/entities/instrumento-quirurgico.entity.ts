@@ -5,12 +5,13 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  OneToMany, // Importa OneToMany
+  OneToMany,
 } from 'typeorm';
 import { CategoriaInstrumento } from '../../categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from '../../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../../ubicacion-almacen/entities/ubicacion-almacen.entity';
-import { Notificacion } from '../../notificacion/entities/notificacion.entity'; // Importa la entidad Notificacion
+import { Notificacion } from '../../notificacion/entities/notificacion.entity';
+import { Venta } from '../../venta/entities/venta.entity'; // Importa la entidad Venta
 
 @Entity('instrumentos_quirurgicos')
 export class InstrumentoQuirurgico {
@@ -32,7 +33,6 @@ export class InstrumentoQuirurgico {
   @Column('int', { default: 0 })
   cantidadStock: number;
 
-  // Campo actualizado
   @Column('int', { default: 0 })
   stockMinimo: number;
 
@@ -81,4 +81,8 @@ export class InstrumentoQuirurgico {
   // Relación con Notificacion
   @OneToMany(() => Notificacion, (notificacion) => notificacion.instrumento)
   notificaciones: Notificacion[];
+
+  // Nueva relación Uno a Muchos con Venta
+  @OneToMany(() => Venta, (venta) => venta.instrumento)
+  ventas: Venta[];
 }
