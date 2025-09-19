@@ -10,6 +10,7 @@ import {
 import { CategoriaInstrumento } from '../../categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from '../../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../../ubicacion-almacen/entities/ubicacion-almacen.entity';
+import { MovimientoInventario } from '../../movimiento/entities/movimiento.entity';
 import { Notificacion } from '../../notificacion/entities/notificacion.entity';
 
 @Entity('instrumentos_quirurgicos')
@@ -17,67 +18,43 @@ export class InstrumentoQuirurgico {
   @PrimaryGeneratedColumn()
   id_instrumento: number;
 
-  @Column({ unique: true, length: 150 })
+  @Column()
   nombre: string;
 
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   descripcion: string;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('int')
   precioUnitario: number;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('int')
   precioVenta: number;
 
-  @Column('int', { default: 0 })
+  @Column('int')
   cantidadStock: number;
 
-  @Column('int', { default: 0 })
-  cantidadStockMinima: number; // ✅ CAMBIO: Renombrado para que coincida con el DTO
+  @Column('int')
+  cantidadStockMinima: number;
 
   @Column({ type: 'date', nullable: true })
   fechaAdquisicion: Date;
 
-  @ManyToOne(
-    () => CategoriaInstrumento,
-    (categoria) => categoria.instrumentos,
-    { eager: true, onDelete: 'SET NULL' },
-  )
-  @JoinColumn({ name: 'categoriaId' })
-  categoria: CategoriaInstrumento | null;
+  // Relaciones
+  @ManyToOne(() => CategoriaInstrumento, (categoria) => categoria.instrumentos)
+  @JoinColumn({ name: 'categoria_id' }) // <-- Corregido para que coincida con tu base de datos
+  categoria: CategoriaInstrumento;
 
-  @Column({ nullable: true })
-  categoriaId: number | null;
+  @ManyToOne(() => Proveedor, (proveedor) => proveedor.instrumentos)
+  @JoinColumn({ name: 'proveedor_id' }) // <-- Corregido para que coincida con tu base de datos
+  proveedor: Proveedor;
 
-  @ManyToOne(
-    () => Proveedor,
-    (proveedor: Proveedor) => proveedor.instrumentos,
-    {
-      eager: true,
-      onDelete: 'SET NULL',
-    },
-  )
-  @JoinColumn({ name: 'proveedorId' })
-  proveedor: Proveedor | null;
+  @ManyToOne(() => UbicacionAlmacen, (ubicacion) => ubicacion.instrumentos)
+  @JoinColumn({ name: 'ubicacion_id' }) // <-- Corregido para que coincida con tu base de datos
+  ubicacion: UbicacionAlmacen;
 
-  @Column({ nullable: true })
-  proveedorId: number | null;
+  @OneToMany(() => MovimientoInventario, (movimiento) => movimiento.instrumento)
+  movimientos: MovimientoInventario[];
 
-  @ManyToOne(
-    () => UbicacionAlmacen,
-    (ubicacion: UbicacionAlmacen) => ubicacion.instrumentos,
-    {
-      eager: true,
-      onDelete: 'SET NULL',
-    },
-  )
-  @JoinColumn({ name: 'ubicacionId' })
-  ubicacion: UbicacionAlmacen | null;
-
-  @Column({ nullable: true })
-  ubicacionId: number | null;
-
-  // Relación con Notificacion
   @OneToMany(() => Notificacion, (notificacion) => notificacion.instrumento)
   notificaciones: Notificacion[];
 }

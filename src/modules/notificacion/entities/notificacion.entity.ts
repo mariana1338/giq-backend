@@ -14,20 +14,26 @@ export class Notificacion {
   @PrimaryGeneratedColumn()
   id_notificacion: number;
 
-  @Column({ nullable: false })
+  @Column()
   mensaje: string;
+
+  @Column({ type: 'boolean', default: false })
+  leida: boolean;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   fecha: Date;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.notificaciones)
+  @ManyToOne(() => Usuario, (usuario) => usuario.notificaciones, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'id_usuario' })
   usuario: Usuario;
 
   @ManyToOne(
     () => InstrumentoQuirurgico,
     (instrumento) => instrumento.notificaciones,
+    { onDelete: 'CASCADE' },
   )
-  @JoinColumn({ name: 'id_producto' }) // El nombre de la columna es 'id_producto'
+  @JoinColumn({ name: 'id_instrumento' })
   instrumento: InstrumentoQuirurgico;
 }

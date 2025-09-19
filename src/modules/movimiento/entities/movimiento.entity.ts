@@ -32,6 +32,6 @@ export class MovimientoInventario {
   @JoinColumn({ name: 'id_instrumento' })
   instrumento: InstrumentoQuirurgico;
 
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  @Column('int')
   precio: number;
 }
