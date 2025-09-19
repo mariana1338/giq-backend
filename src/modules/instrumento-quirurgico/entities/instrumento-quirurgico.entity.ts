@@ -11,7 +11,6 @@ import { CategoriaInstrumento } from '../../categoria-instrumento/entities/categ
 import { Proveedor } from '../../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../../ubicacion-almacen/entities/ubicacion-almacen.entity';
 import { Notificacion } from '../../notificacion/entities/notificacion.entity';
-import { Venta } from '../../venta/entities/venta.entity'; // Importa la entidad Venta
 
 @Entity('instrumentos_quirurgicos')
 export class InstrumentoQuirurgico {
@@ -34,7 +33,7 @@ export class InstrumentoQuirurgico {
   cantidadStock: number;
 
   @Column('int', { default: 0 })
-  stockMinimo: number;
+  cantidadStockMinima: number; // ✅ CAMBIO: Renombrado para que coincida con el DTO
 
   @Column({ type: 'date', nullable: true })
   fechaAdquisicion: Date;
@@ -81,8 +80,4 @@ export class InstrumentoQuirurgico {
   // Relación con Notificacion
   @OneToMany(() => Notificacion, (notificacion) => notificacion.instrumento)
   notificaciones: Notificacion[];
-
-  // Nueva relación Uno a Muchos con Venta
-  @OneToMany(() => Venta, (venta) => venta.instrumento)
-  ventas: Venta[];
 }

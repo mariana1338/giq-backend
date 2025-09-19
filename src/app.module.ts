@@ -10,7 +10,7 @@ import { ProveedorModule } from './modules/proveedor/proveedor.module';
 import { UbicacionAlmacenModule } from './modules/ubicacion-almacen/ubicacion-almacen.module';
 import { CategoriaInstrumentoModule } from './modules/categoria-instrumento/categoria-instrumento.module';
 import { NotificacionModule } from './modules/notificacion/notificacion.module';
-import { VentaModule } from './modules/venta/venta.module';
+import { MovimientoModule } from './modules/movimiento/movimiento.module';
 
 // Importa todas las entidades
 import { Usuario } from './modules/usuario/entities/usuario.entity';
@@ -19,7 +19,7 @@ import { Proveedor } from './modules/proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from './modules/ubicacion-almacen/entities/ubicacion-almacen.entity';
 import { CategoriaInstrumento } from './modules/categoria-instrumento/entities/categoria-instrumento.entity';
 import { Notificacion } from './modules/notificacion/entities/notificacion.entity';
-import { Venta } from './modules/venta/entities/venta.entity'; // 💡 Importa la entidad Venta
+import { MovimientoInventario } from './modules/movimiento/entities/movimiento.entity'; // 💡 Importa la nueva entidad
 
 @Module({
   imports: [
@@ -37,14 +37,13 @@ import { Venta } from './modules/venta/entities/venta.entity'; // 💡 Importa l
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [
-          // Añade todas las entidades aquí
           Usuario,
           InstrumentoQuirurgico,
           Proveedor,
           UbicacionAlmacen,
           CategoriaInstrumento,
           Notificacion,
-          Venta, // 💡 Añade la entidad Venta
+          MovimientoInventario, // 💡 Añade la nueva entidad
         ],
         synchronize: true,
         logging: false,
@@ -57,7 +56,7 @@ import { Venta } from './modules/venta/entities/venta.entity'; // 💡 Importa l
     UbicacionAlmacenModule,
     CategoriaInstrumentoModule,
     NotificacionModule,
-    VentaModule,
+    MovimientoModule,
   ],
 })
 export class AppModule {}

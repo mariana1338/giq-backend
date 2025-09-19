@@ -7,13 +7,15 @@ import {
   Param,
   Delete,
   HttpStatus,
-  HttpException, // Importa HttpException para manejo de errores
+  HttpException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { InstrumentoQuirurgicoService } from './instrumento-quirurgico.service';
 import { CreateInstrumentoQuirurgicoDto } from './dto/create-instrumento-quirurgico.dto';
 import { UpdateInstrumentoQuirurgicoDto } from './dto/update-instrumento-quirurgico.dto';
+import { AddStockDto } from './dto/add-stock.dto';
 
-@Controller('instrumentos-quirurgicos') // Ruta base para este controlador
+@Controller('instrumentos-quirurgicos')
 export class InstrumentoQuirurgicoController {
   constructor(
     private readonly instrumentoQuirurgicoService: InstrumentoQuirurgicoService,
@@ -27,8 +29,7 @@ export class InstrumentoQuirurgicoController {
       return await this.instrumentoQuirurgicoService.create(
         createInstrumentoQuirurgicoDto,
       );
-    } catch (error) {
-      // Re-lanza HttpException si ya es una, o envuelve otros errores inesperados
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
@@ -43,7 +44,7 @@ export class InstrumentoQuirurgicoController {
   async findAll() {
     try {
       return await this.instrumentoQuirurgicoService.findAll();
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
@@ -57,10 +58,9 @@ export class InstrumentoQuirurgicoController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      const instrumento = await this.instrumentoQuirurgicoService.findOne(+id); // Convierte el ID a número
-      // El servicio ya lanza HttpException si no lo encuentra, por lo que no es necesario un if aquí
+      const instrumento = await this.instrumentoQuirurgicoService.findOne(+id);
       return instrumento;
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
@@ -82,7 +82,7 @@ export class InstrumentoQuirurgicoController {
         updateInstrumentoQuirurgicoDto,
       );
       return updatedInstrumento;
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
@@ -93,12 +93,27 @@ export class InstrumentoQuirurgicoController {
     }
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Patch(':id/add-stock')
+  async addStock(@Param('id') id: string, @Body() addStockDto: AddStockDto) {
     try {
-      await this.instrumentoQuirurgicoService.remove(+id);
+      return await this.instrumentoQuirurgicoService.addStock(+id, addStockDto);
+    } catch (error: unknown) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Error inesperado al añadir o retirar stock.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.instrumentoQuirurgicoService.remove(id);
       return { message: `Instrumento con ID ${id} eliminado exitosamente.` };
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }

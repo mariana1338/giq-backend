@@ -1,3 +1,4 @@
+// src/modules/instrumento-quirurgico/instrumento-quirurgico.service.ts
 import {
   Injectable,
   HttpException,
@@ -14,11 +15,8 @@ import { Proveedor } from '../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../ubicacion-almacen/entities/ubicacion-almacen.entity';
 import { NotificacionService } from '../notificacion/notificacion.service';
 import { Usuario } from '../usuario/entities/usuario.entity';
-
-// Función de guarda de tipo para verificar si el error tiene una propiedad 'code' (como los errores de DB)
-function isDatabaseError(error: any): error is { code: string } {
-  return typeof error === 'object' && error !== null && 'code' in error;
-}
+import { MovimientoInventario } from '../movimiento/entities/movimiento.entity';
+import { AddStockDto } from './dto/add-stock.dto';
 
 @Injectable()
 export class InstrumentoQuirurgicoService {
@@ -33,16 +31,30 @@ export class InstrumentoQuirurgicoService {
     private readonly ubicacionRepository: Repository<UbicacionAlmacen>,
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(MovimientoInventario)
+    private readonly movimientoRepository: Repository<MovimientoInventario>,
     private readonly notificacionService: NotificacionService,
   ) {}
 
   async create(
     createInstrumentoQuirurgicoDto: CreateInstrumentoQuirurgicoDto,
   ): Promise<InstrumentoQuirurgico> {
-    const { categoriaId, proveedorId, ubicacionId, ...instrumentoData } =
-      createInstrumentoQuirurgicoDto;
+    const {
+      categoriaId,
+      proveedorId,
+      ubicacionId,
+      id_usuario,
+      ...instrumentoData
+    } = createInstrumentoQuirurgicoDto;
 
     const newInstrumento = this.instrumentoRepository.create(instrumentoData);
+
+    const usuario = await this.usuarioRepository.findOneBy({ id_usuario });
+    if (!usuario) {
+      throw new NotFoundException(
+        `Usuario con ID ${id_usuario} no encontrado.`,
+      );
+    }
 
     if (categoriaId) {
       const categoria = await this.categoriaRepository.findOneBy({
@@ -84,18 +96,37 @@ export class InstrumentoQuirurgicoService {
     }
 
     try {
-      return await this.instrumentoRepository.save(newInstrumento);
-    } catch (error: unknown) {
-      if (isDatabaseError(error) && error.code === 'ER_DUP_ENTRY') {
+      const instrumentoGuardado =
+        await this.instrumentoRepository.save(newInstrumento);
+
+      if (instrumentoGuardado && usuario) {
+        const movimiento = this.movimientoRepository.create({
+          cantidad: instrumentoGuardado.cantidadStock,
+          tipo_movimiento: 'entrada',
+          precio:
+            instrumentoGuardado.cantidadStock *
+            instrumentoGuardado.precioUnitario,
+          instrumento: instrumentoGuardado,
+          usuario,
+        });
+
+        await this.movimientoRepository.save(movimiento);
+      } else {
+        throw new HttpException(
+          'Error al guardar el instrumento o encontrar el usuario.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      return instrumentoGuardado;
+    } catch (error: any) {
+      if (error.code === 'ER_DUP_ENTRY') {
         throw new HttpException(
           'Ya existe un instrumento con este nombre o código.',
           HttpStatus.CONFLICT,
         );
       }
-      throw new HttpException(
-        'Error interno del servidor al crear el instrumento.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
@@ -131,7 +162,8 @@ export class InstrumentoQuirurgicoService {
 
     if (
       updateInstrumentoQuirurgicoDto.cantidadStock !== undefined &&
-      updateInstrumentoQuirurgicoDto.cantidadStock <= instrumento.stockMinimo
+      updateInstrumentoQuirurgicoDto.cantidadStock <=
+        instrumento.cantidadStockMinima
     ) {
       const mensaje = `¡Alerta de Stock Bajo! El instrumento ${instrumento.nombre} tiene solo ${updateInstrumentoQuirurgicoDto.cantidadStock} unidades.`;
 
@@ -156,7 +188,23 @@ export class InstrumentoQuirurgicoService {
   }
 
   async remove(id: number): Promise<boolean> {
+    const instrumento = await this.instrumentoRepository.findOne({
+      where: { id_instrumento: id },
+    });
+
+    if (!instrumento) {
+      throw new HttpException(
+        `Instrumento con ID ${id} no encontrado.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    await this.movimientoRepository.delete({
+      instrumento: { id_instrumento: instrumento.id_instrumento },
+    });
+
     const result = await this.instrumentoRepository.delete(id);
+
     if (result.affected === 0) {
       throw new HttpException(
         `Instrumento con ID ${id} no encontrado para eliminar.`,
@@ -164,5 +212,63 @@ export class InstrumentoQuirurgicoService {
       );
     }
     return true;
+  }
+
+  async addStock(
+    id: number,
+    addStockDto: AddStockDto,
+  ): Promise<InstrumentoQuirurgico> {
+    const { cantidad, id_usuario } = addStockDto;
+
+    const instrumento = await this.instrumentoRepository.findOneBy({
+      id_instrumento: id,
+    });
+
+    if (!instrumento) {
+      throw new NotFoundException(
+        `Instrumento Quirúrgico con ID ${id} no encontrado.`,
+      );
+    }
+
+    const usuario = await this.usuarioRepository.findOneBy({
+      id_usuario: id_usuario,
+    });
+    if (!usuario) {
+      throw new NotFoundException(
+        `Usuario con ID ${id_usuario} no encontrado.`,
+      );
+    }
+
+    const tipoMovimiento = cantidad > 0 ? 'entrada' : 'salida';
+    const nuevaCantidadStock = instrumento.cantidadStock + cantidad;
+
+    if (nuevaCantidadStock < 0) {
+      throw new HttpException(
+        'El stock no puede ser menor a cero.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    instrumento.cantidadStock = nuevaCantidadStock;
+
+    const precioMovimiento =
+      tipoMovimiento === 'entrada'
+        ? Math.abs(cantidad) * instrumento.precioUnitario
+        : Math.abs(cantidad) * instrumento.precioVenta;
+
+    const instrumentoActualizado =
+      await this.instrumentoRepository.save(instrumento);
+
+    const movimiento = this.movimientoRepository.create({
+      cantidad: Math.abs(cantidad),
+      tipo_movimiento: tipoMovimiento,
+      precio: precioMovimiento,
+      instrumento: instrumentoActualizado,
+      usuario,
+    });
+
+    await this.movimientoRepository.save(movimiento);
+
+    return instrumentoActualizado;
   }
 }

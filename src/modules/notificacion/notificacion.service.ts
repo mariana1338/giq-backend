@@ -3,9 +3,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notificacion } from './entities/notificacion.entity';
-import { Usuario } from '../usuario/entities/usuario.entity';
 import { InstrumentoQuirurgico } from '../instrumento-quirurgico/entities/instrumento-quirurgico.entity';
-import { CreateNotificacionDto } from './dto/create-notificacion.dto';
+import { Usuario } from '../usuario/entities/usuario.entity';
+import { CreateNotificacionDto } from './dto/create-notificacion.dto'; // 💡 Importa el nuevo DTO
 
 @Injectable()
 export class NotificacionService {
@@ -18,12 +18,16 @@ export class NotificacionService {
     private readonly instrumentoRepository: Repository<InstrumentoQuirurgico>,
   ) {}
 
-  async crearNotificacion(dto: CreateNotificacionDto): Promise<Notificacion> {
+  async crearNotificacion(
+    createNotificacionDto: CreateNotificacionDto, // 💡 Usa el DTO como parámetro
+  ): Promise<Notificacion> {
+    const { mensaje, id_usuario, id_instrumento } = createNotificacionDto; // 💡 Desestructura de forma segura
+
     const usuario = await this.usuarioRepository.findOne({
-      where: { id_usuario: dto.id_usuario },
+      where: { id_usuario },
     });
     const instrumento = await this.instrumentoRepository.findOne({
-      where: { id_instrumento: dto.id_instrumento },
+      where: { id_instrumento },
     });
 
     if (!usuario || !instrumento) {
@@ -33,7 +37,7 @@ export class NotificacionService {
     }
 
     const nuevaNotificacion = this.notificacionRepository.create({
-      mensaje: dto.mensaje,
+      mensaje,
       usuario,
       instrumento,
       fecha: new Date(),

@@ -1,3 +1,4 @@
+// src/modules/instrumento-quirurgico/dto/create-instrumento-quirurgico.dto.ts
 import {
   IsString,
   IsNotEmpty,
@@ -19,7 +20,7 @@ export class CreateInstrumentoQuirurgicoDto {
 
   @IsNumber({}, { message: 'El precio unitario debe ser un número.' })
   @Min(0, { message: 'El precio unitario no puede ser negativo.' })
-  @Type(() => Number) // Asegura que el valor se transforme a número
+  @Type(() => Number)
   precioUnitario: number;
 
   @IsNumber({}, { message: 'El precio de venta debe ser un número.' })
@@ -48,7 +49,7 @@ export class CreateInstrumentoQuirurgicoDto {
     },
   )
   @IsOptional()
-  fechaAdquisicion?: string; // Usamos string para la entrada, TypeORM lo convertirá a Date
+  fechaAdquisicion?: string;
 
   @IsNumber({}, { message: 'El ID de categoría debe ser un número.' })
   @IsOptional()
@@ -64,4 +65,10 @@ export class CreateInstrumentoQuirurgicoDto {
   @IsOptional()
   @Type(() => Number)
   ubicacionId?: number;
+
+  // ✅ Cambio: Añadir el id_usuario al DTO
+  @IsNumber({}, { message: 'El ID de usuario debe ser un número.' })
+  @IsNotEmpty({ message: 'El ID de usuario no puede estar vacío.' })
+  @Type(() => Number)
+  id_usuario: number;
 }
