@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+    <link rel="stylesheet" href="/frontend/estilos/inventari.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <button class="back" onclick="history.back()">←</button>
+        </div>
+        <h2 class="header-title">Inventario</h2>
+        <div class="header-right">
+            <div class="alert">
+                <span>2 productos con stock bajo</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="search-bar">
+        <input  type="text" placeholder="Buscar un producto">
+        <button class="btn">Buscar</button>
+        <button class="btn create" id="btnCrear">+ Crear Producto</button>
+    </section>
+
+    <main class="cards-container">
+        <div class="card">
+            <h2 class="product-title">Bisturí Quirúrgico</h2>
+            <p class="code">BQ001</p>
+            <span class="tag">Instrumentos de Corte</span>
+            <div class="item-info">
+                <p>Stock:</p> <span class="stock ok">45</span>
+            </div>
+            <div class="item-info">
+                <p>Min:</p> <span>10</span>
+            </div>
+            <div class="price-info">
+                <p>Precio:</p> <span>$100.000</span>
+            </div>
+            <div class="cost-info">
+                <p>Costo: $62.000</p> <span class="percent">+61.3%</span>
+            </div>
+            <div class="actions">
+                <button class="edit">✏️</button>
+                <button class="delete">🗑️</button>
+            </div>
+        </div>
+
+        <div class="card low-stock">
+            <h2 class="product-title">Pinzas Hemostáticas <span class="warning-icon">⚠️</span></h2>
+            <p class="code">PH002</p>
+            <span class="tag">Pinzas</span>
+            <div class="item-info">
+                <p>Stock:</p> <span class="stock danger">8</span>
+            </div>
+            <div class="item-info">
+                <p>Min:</p> <span>15</span>
+            </div>
+            <div class="price-info">
+                <p>Precio:</p> <span>$82.000</span>
+            </div>
+            <div class="cost-info">
+                <p>Costo: $49.200</p> <span class="percent">+66.7%</span>
+            </div>
+            <div class="actions">
+                <button class="edit">✏️</button>
+                <button class="delete">🗑️</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="product-title">Tijeras Quirúrgicas</h2>
+            <p class="code">TQ003</p>
+            <span class="tag">Instrumentos de Corte</span>
+            <div class="item-info">
+                <p>Stock:</p> <span class="stock ok">23</span>
+            </div>
+            <div class="item-info">
+                <p>Min:</p> <span>8</span>
+            </div>
+            <div class="price-info">
+                <p>Precio:</p> <span>$128.000</span>
+            </div>
+            <div class="cost-info">
+                <p>Costo: $75.000</p> <span class="percent">+70.7%</span>
+            </div>
+            <div class="actions">
+                <button class="edit">✏️</button>
+                <button class="delete">🗑️</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="product-title">Separadores Quirúrgicos</h2>
+            <p class="code">SQ004</p>
+            <span class="tag">Separadores</span>
+            <div class="item-info">
+                <p>Stock:</p> <span class="stock ok">67</span>
+            </div>
+            <div class="item-info">
+                <p>Min:</p> <span>12</span>
+            </div>
+            <div class="price-info">
+                <p>Precio:</p> <span>$154.000</span>
+            </div>
+            <div class="cost-info">
+                <p>Costo: $89.600</p> <span class="percent">+71.9%</span>
+            </div>
+            <div class="actions">
+                <button class="edit">✏️</button>
+                <button class="delete">🗑️</button>
+            </div>
+        </div>
+        
+        <div class="card low-stock">
+            <h2 class="product-title">Porta Agujas <span class="warning-icon">⚠️</span></h2>
+            <p class="code">PA005</p>
+            <span class="tag">Pinzas</span>
+            <div class="item-info">
+                <p>Stock:</p> <span class="stock danger">5</span>
+            </div>
+            <div class="item-info">
+                <p>Min:</p> <span>15</span>
+            </div>
+            <div class="price-info">
+                <p>Precio:</p> <span>$90.000</span>
+            </div>
+            <div class="cost-info">
+                <p>Costo: $55.000</p> <span class="percent">+63.6%</span>
+            </div>
+            <div class="actions">
+                <button class="edit">✏️</button>
+                <button class="delete">🗑️</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear Producto -->
+    <div class="modal" id="modalCrear">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h2>Crear Nuevo Producto</h2>
+                <span class="close" id="cerrarModal">&times;</span>
+            </div>
+
+            <form id="formProducto">
+                <label for="nombre">Nombre del Producto</label>
+                <input type="text" id="nombre" required>
+
+                <label for="codigo">Código</label>
+                <input type="text" id="codigo" required>
+
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label for="cantidad">Cantidad</label>
+                        <input type="number" id="cantidad" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label for="minimo">Cantidad Mínima</label>
+                        <input type="number" id="minimo" required>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label for="precioEntrada">Precio de Entrada</label>
+                        <input type="number" id="precioEntrada" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label for="precioVenta">Precio de Venta</label>
+                        <input type="number" id="precioVenta" required>
+                    </div>
+                </div>
+
+                <!-- Menú desplegable de Categoría -->
+                <label for="categoria">Categoría</label>
+                <select id="categoria" required>
+                    <option value=""> Selecciona una categoría </option>
+                    <option value="corte">Instrumentos de Corte</option>
+                    <option value="pinzas">Pinzas</option>
+                    <option value="separadores">Separadores</option>
+                    <option value="suturas">Suturas</option>
+                </select>
+
+                <!-- Menú desplegable de Proveedor -->
+                <label for="proveedor">Proveedor</label>
+                <select id="proveedor" required>
+                    <option value=""> Selecciona un proveedor </option>
+                    <option value="proveedor1">Proveedor 1</option>
+                    <option value="proveedor2">Proveedor 2</option>
+                    <option value="proveedor3">Proveedor 3</option>
+                </select>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn cancelar" id="cancelarModal">Cancelar</button>
+                    <button type="submit" class="btn crear">Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/frontend/js/invetario.js"></script>
+</body>
+</html>

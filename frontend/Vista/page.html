@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/frontend/estilos/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.css">
+    <link rel="icon" type="image/png" href="/frontend/img/LogoG.I.Q.png">
+</head>
+<body>
+    <div class="top-row">
+        <div class="top-left">
+            <div class="top-logo" aria-hidden="false">
+                <img src="/frontend/img/LogoG.I.Q.png" alt="Logo G.I.Q">
+            </div>
+            <div class="welcome-wrap">
+                <h1 class="welcome-text">Bienvenidos G.I.Q</h1>
+            </div>
+        </div>
+
+        <header class="navbar" role="navigation" aria-label="Barra superior">
+            <div class="nav-icons" role="toolbar" aria-label="Iconos de navegación">
+                <a href="/frontend/Vista/noti.html" title="Notificaciones" aria-label="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                </a>
+                <a href="/frontend/Vista/perfil.html" title="Mi Perfil" aria-label="Mi Perfil">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+                <a href="/frontend/Vista/configu.html" title="Configuración" aria-label="Configuración">
+                    <i class="fi fi-rs-settings"></i>
+                </a>
+                <a href="/frontend/Vista/report.html" title="Reportes" aria-label="Reportes">
+                    <i class="fas fa-folder"></i>
+                </a>
+                 <a href="/frontend/Vista/ventas.html" title="Ventas" aria-label="Ventas">
+                    <i class="fi fi-rr-shopping-cart"></i>
+                </a>
+            </div>
+        </header>
+    </div>
+
+    <main class="dashboard-content">
+        <section class="summary-cards">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Valor del Stock</h4>
+                    <span class="icon">$</span>
+                </div>
+                <div class="card-body">
+                    <h2>$ 154,525,560</h2>
+                    <p class="growth positive">+12% del mes pasado</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Ganancia</h4>
+                    <i class="fas fa-chart-line icon"></i>
+                </div>
+                <div class="card-body">
+                    <h2>$ 59,004,640</h2>
+                    <p class="growth positive">+8% del mes pasado</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Gastos</h4>
+                    <i class="fas fa-chart-line icon"></i>
+                </div>
+                <div class="card-body">
+                    <h2>$ 25,369,080</h2>
+                    <p class="growth negative">-3% del mes pasado</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Clientes</h4>
+                    <i class="fas fa-users icon"></i>
+                </div>
+                <div class="card-body">
+                    <h2>129</h2>
+                    <p class="growth positive">+5 nuevos este mes</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="inventory-section">
+            <div class="inventory-header">
+                <h3>INVENTARIO</h3>
+                <div class="inventory-actions">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar un producto">
+                        <button class="search-btn">Buscar</button>
+                    </div>
+                   
+                    <a href="/frontend/Vista/inventario.html" class="create-btn">Inventario</a>
+                    <a href="/frontend/Vista/almacen.html" class="create-btn">Almacén</a>
+                </div>
+            </div>
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Cantidad Mín.</th>
+                        <th>Precio de entrada</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bisturí Quirúrgico</td>
+                        <td>92</td>
+                        <td>11</td>
+                        <td>$ 112,750</td>
+                        <td>$ 170,000</td>
+                    </tr>
+                    <tr>
+                        <td>Pinzas Hemostáticas</td>
+                        <td>17</td>
+                        <td>8</td>
+                        <td>$ 88,400</td>
+                        <td>$ 147,000</td>
+                    </tr>
+                    <tr>
+                        <td>Tijeras Quirúrgicas</td>
+                        <td>21</td>
+                        <td>12</td>
+                        <td>$ 79,200</td>
+                        <td>$ 116,400</td>
+                    </tr>
+                    <tr>
+                        <td>Separadores Quirúrgicos</td>
+                        <td>73</td>
+                        <td>10</td>
+                        <td>$ 33,400</td>
+                        <td>$ 51,960</td>
+                    </tr>
+                    <tr>
+                        <td>Porta Agujas</td>
+                        <td>7</td>
+                        <td>3</td>
+                        <td>$ 60,600</td>
+                        <td>$ 89,800</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="/frontend/js/inicio.js"></script>
+</body>
+</html>

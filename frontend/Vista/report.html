@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/estilos/reportes.css">
+    <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+</head>
+<body>
+    <header class="topbar">
+        <button class="back" onclick="history.back()">←</button>
+        <div class="top-title">
+            <h1>Reportes</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="block filters">
+            <div class="row">
+                <div>
+                    <label>Fecha Desde</label>
+                    <input type="date">
+                </div>
+                <div>
+                    <label>Fecha Hasta</label>
+                    <input type="date">
+                </div>
+                <div>
+                    <label>Tipo de Movimiento</label>
+                    <select>
+                        <option>Todos</option>
+                        <option>Entrada</option>
+                        <option>Salida</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Producto</label>
+                    <input type="text" placeholder="Buscar producto...">
+                </div>
+            </div>
+            <div class="actions">
+                <button>Aplicar Filtros</button>
+                <button class="clear-btn">Limpiar</button>
+            </div>
+        </div>
+        <div class="block summary">
+            <div class="summary-card">
+                <h2>Valor Total</h2>
+                <div class="value">$ 7.964.000</div>
+                <div class="desc">Basado en 5 movimientos</div>
+            </div>
+            <div class="summary-card entradas">
+                <h2>Entradas</h2>
+                <div class="value">3</div>
+                <div class="desc">Movimientos de entrada</div>
+            </div>
+            <div class="summary-card salidas">
+                <h2>Salidas</h2>
+                <div class="value">2</div>
+                <div class="desc">Movimientos de salida</div>
+            </div>
+        </div>
+        <div class="block export">
+            <span>Exportar Reporte</span>
+            <button>CSV</button>
+            <button>Excel</button>
+            <button>PDF</button>
+        </div>
+        <div class="block history">
+            <h2>Historial de Movimientos</h2>
+            <p>Registro detallado de entradas y salidas de inventario</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Tipo</th>
+                        <th>Cantidad</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-01-01</td>
+                        <td>Bisturí Quirúrgico</td>
+                        <td><span class="tipo-entrada">Entrada</span></td>
+                        <td>+50</td>
+                        <td class="valor-positivo">$ 3.100.000</td>
+                    </tr>
+                    <tr>
+                        <td>2025-01-02</td>
+                        <td>Pinzas Hemostáticas</td>
+                        <td><span class="tipo-salida">Salida</span></td>
+                        <td>-7</td>
+                        <td class="valor-negativo">$ -574.000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

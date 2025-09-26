@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Prueba - Centro de Notificaciones</title>
+    <link rel="stylesheet" href="/frontend/estilos/notificaciones.css">
+    <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+</head>
+<body>
+    <header class="notif-header">
+        <button class="back-btn" onclick="window.history.back()">&#8592;</button>
+        <h2>Centro de Notificaciones — Pruebas</h2>
+    </header>
+
+    <main class="notif-main">
+        <section class="notif-actions">
+            <button class="notif-btn" onclick="marcarTodasLeidas()">Marcar todas como leídas</button>
+            <button class="notif-btn notif-btn-clear" onclick="borrarLeidas()">Eliminar leídas</button>
+            <button class="notif-btn" onclick="agregarNotiPrueba()">Agregar notificación prueba</button>
+        </section>
+
+        <section class="notif-list" id="notifList">
+            <!-- Notificaciones se llenan por JS -->
+        </section>
+    </main>
+
+    <script src="/frontend/js/notificacion.js"></script>
+</body>
+</html>

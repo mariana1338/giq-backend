@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mi Perfil | G.I.Q</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/estilos/perfil.css">
+    <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+</head>
+<body>
+    <header class="topbar">
+        <button class="back" onclick="history.back()">←</button>
+        <div class="top-title">
+            <h1>Mi Perfil</h1>
+        </div>
+    </header>
+
+    <main class="profile-wrap">
+        <aside class="profile-card">
+            <div class="avatar">JH
+                <button class="avatar-btn" title="Cambiar foto">📷</button>
+            </div>
+            <h2 class="name">Juan Diego</h2>
+            <div class="email">Juandidog18@gmail.com</div>
+            <span class="role">Administrador</span>
+
+            <ul class="meta">
+                <li><strong>Departamento:</strong> Gestión de Inventario</li>
+                <li><strong>Fecha de ingreso:</strong> Enero 2024</li>
+            </ul>
+        </aside>
+
+        <section class="info-card">
+            <div class="info-header">
+                <h3>Información Personal</h3>
+                <div class="info-actions">
+                    <button id="editBtn" class="btn small">✎ Editar</button>
+                </div>
+            </div>
+
+            <form id="profileForm" class="info-form" autocomplete="off">
+                <div class="grid-2">
+                    <label>
+                        Nombre Completo
+                        <input type="text" id="nombre" value="Juan Diego Hurtado" readonly>
+                    </label>
+                    <label>
+                        Correo Electrónico
+                        <input type="email" id="correo" value="juan.hurtado@gigq.com" readonly>
+                    </label>
+                </div>
+
+                <div class="grid-2">
+                    <label>
+                        Número de Documento
+                        <input type="text" id="documento" value="1234567890" readonly>
+                    </label>
+                    <label>
+                        Teléfono
+                        <input type="tel" id="telefono" value="+57 300 123 4567" readonly>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="logoutBtn" class="btn primary">Cerrar Sesión</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="stats-row">
+            <div class="stat">
+                <div class="stat-number">47</div>
+                <div class="stat-label">Productos Creados</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">23</div>
+                <div class="stat-label">Reportes Generados</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">156</div>
+                <div class="stat-label">Movimientos Registrados</div>
+            </div>
+        </section>
+    </main>
+    <script src="/frontend/js/perfil.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta | G.I.Q</title>
+    <link rel="stylesheet" href="/frontend/estilos/registro.css">
+    <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+</head>
+<body>
+    <div class="register-container">
+        <button class="back-arrow" onclick="window.history.back()" title="Volver">&#8592;</button>
+        <div class="logo">
+            <img src="/img/LogoG.I.Q.png" alt="">
+        </div>
+        <div class="register-title">Crear Cuenta</div>
+        <div class="register-subtitle">Únete a G.I.Q</div>
+        <form class="register-form" id="registerForm" autocomplete="off">
+            <div class="input-group">
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#b0bec5" viewBox="0 0 24 24">
+                        <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+                    </svg>
+                </span>
+                <input type="text" placeholder="Nombre completo" id="nombre" required>
+            </div>
+            <div class="input-group">
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#b0bec5" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zm0 12H4V8.99l8 6.99 8-6.99V18z"/>
+                    </svg>
+                </span>
+                <input type="email" placeholder="Correo electrónico" id="correo" required>
+            </div>
+
+            <!-- CAMPO MODIFICADO: Rol en lugar de cédula -->
+            <div class="input-group">
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#b0bec5" viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/>
+                    </svg>
+                </span>
+                <select id="rol" required>
+                    <option value="" disabled selected>Selecciona un rol</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="usuario">Usuario</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#b0bec5" viewBox="0 0 24 24">
+                        <path d="M12 17a2 2 0 0 0 2-2v-2a2 2 0 1 0-4 0v2a2 2 0 0 0 2 2zm6-6V9a6 6 0 1 0-12 0v2a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zm-2 0H8V9a4 4 0 1 1 8 0v2z"/>
+                    </svg>
+                </span>
+                <input type="password" placeholder="Crear contraseña" id="password" required>
+                <button type="button" class="toggle-password" onclick="togglePassword()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                    </svg>
+                </button>
+            </div>
+            <button  type="submit" class="register-btn">Crear Cuenta</button>
+        </form>
+        <div class="login-link">
+            Ya tienes cuenta? <a href="/frontend/Vista/login.html">Inicia sesión</a>
+        </div>
+    </div>
+    <script>
+        function togglePassword() {
+            const pwd = document.getElementById('password');
+            pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+    <script src="/frontend/js/registro.js"></script>
+</body>
+</html>

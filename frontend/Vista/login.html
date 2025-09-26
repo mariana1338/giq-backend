@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/frontend/estilos/login.css">  
+   <link rel="icon" type="image/png" href="/frontend/img/logo_sinfondo (1).png">
+</head>
+<body>  
+    <div class="login-container">
+        <div class="login-icon">
+            <img src="/img/LogoG.I.Q.png" alt="Logo G.I.Q" />
+        </div>
+        <div class="login-title">Bienvenido</div>
+        <div class="login-subtitle">Sistema G.I.Q</div>
+        <form class="login-form">
+            <div class="input-group">
+                <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#b0bec5" viewBox="0 0 24 24">
+                        <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+                    </svg>
+                </span>
+                <input type="text" placeholder="Usuario" id="usuario" required>
+            </div>
+            <div class="input-group">
+                <span class="input-icon">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#b0bec5" viewBox="0 0 24 24">
+                        <path d="M12 17a2 2 0 0 0 2-2v-2a2 2 0 1 0-4 0v2a2 2 0 0 0 2 2zm6-6V9a6 6 0 1 0-12 0v2a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zm-2 0H8V9a4 4 0 1 1 8 0v2z"/>
+                    </svg>
+                    
+                </span>
+                
+                <input type="password" placeholder="Contraseña" id="password" required>
+                <button type="button" class="toggle-password" onclick="togglePassword()">
+      
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                       <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                     </svg>
+                </button>
+                
+            </div>
+            <button type="submit" class="login-btn">Iniciar Sesión</button>
+        </form>
+        <div class="register-link">
+            ¿No tienes cuenta? <a href="/frontend/Vista/registro.html">Regístrate</a>
+        </div>  
+    </div>
+    <script src="/frontend/js/login.js"></script>
+</body>
+</html>

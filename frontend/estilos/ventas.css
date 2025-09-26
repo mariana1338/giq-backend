@@ -1,0 +1,209 @@
+/* --- Estilos generales (basado en tu inventario) --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #f4f7f9;
+  color: #333;
+  padding: 20px;
+}
+
+main {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* --- Encabezado --- */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6ec1c7;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.back:hover {
+  color: #4ea3a8;
+}
+
+.header-title {
+  flex-grow: 1;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.alert {
+  background: #ff0000;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* --- Barra de búsqueda y botones --- */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0px;
+  padding: 70px 20px 16px 20px;
+}
+
+.search-bar input {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+}
+
+.btn {
+  padding: 10px 15px;
+  background: #A7CFD0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #4ea3a8;
+}
+
+/* --- Tabla de ventas --- */
+.tabla-ventas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-ventas th,
+.tabla-ventas td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.tabla-ventas th {
+  font-weight: 600;
+  color: #444;
+}
+
+/* --- Modal --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 420px;
+  max-width: 95%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  color: #999;
+}
+
+.close:hover {
+  color: #333;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal label {
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background: #fff;
+  color: #333;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modal-footer .btn.cancelar {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.modal-footer .btn.crear {
+  background: #6ec1c7;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

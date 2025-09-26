@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Almacén</title>
+  <link rel="stylesheet" href="/frontend/estilos/almacen.css">
+</head>
+<body>
+  <!-- Flecha de regreso -->
+  <header>
+    <a href="/frontend/Vista/page.html" class="back-arrow">←</a>
+    <h1>Gestión de Almacén</h1>
+  </header>
+
+  <!-- Botones -->
+  <div class="btn-container">
+    <button id="btnCrearProveedor">+ Crear Proveedor</button>
+    <button id="btnCrearCategoria">+ Crear Categoría</button>
+    <button id="btnCrearAlmacen">+ Crear Almacén</button>
+  </div>
+
+  <!-- Contenedor de tarjetas -->
+  <div id="cardContainer" class="card-container"></div>
+
+  <!-- Modal Proveedor -->
+  <div id="modalProveedor" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="modalProveedor">&times;</span>
+      <h2>Crear Nuevo Proveedor</h2>
+      <form id="formProveedor">
+        <label>Nombre</label>
+        <input type="text" id="provNombre" required>
+        <label>Contacto</label>
+        <input type="text" id="provContacto" required>
+        <label>Dirección</label>
+        <input type="text" id="provDireccion" required>
+        <div class="modal-buttons">
+          <button type="button" class="cancel" data-modal="modalProveedor">Cancelar</button>
+          <button type="submit" class="create">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Categoría -->
+  <div id="modalCategoria" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="modalCategoria">&times;</span>
+      <h2>Crear Nueva Categoría</h2>
+      <form id="formCategoria">
+        <label>Nombre</label>
+        <input type="text" id="catNombre" required>
+        <div class="modal-buttons">
+          <button type="button" class="cancel" data-modal="modalCategoria">Cancelar</button>
+          <button type="submit" class="create">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Almacén -->
+  <div id="modalAlmacen" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="modalAlmacen">&times;</span>
+      <h2>Crear Nuevo Almacén</h2>
+      <form id="formAlmacen">
+        <label>Nombre</label>
+        <input type="text" id="almNombre" required>
+        <label>Ubicación</label>
+        <input type="text" id="almUbicacion" required>
+        <div class="modal-buttons">
+          <button type="button" class="cancel" data-modal="modalAlmacen">Cancelar</button>
+          <button type="submit" class="create">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Editar -->
+  <div id="modalEditar" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="modalEditar">&times;</span>
+      <h2>Editar Tarjeta</h2>
+      <form id="formEditar">
+        <input type="hidden" id="editType">
+        <label>Nombre</label>
+        <input type="text" id="editNombre" required>
+        <div id="extraFields"></div>
+        <div class="modal-buttons">
+          <button type="button" class="cancel" data-modal="modalEditar">Cancelar</button>
+          <button type="submit" class="create">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/frontend/js/almacen.js"></script>
+</body>
+</html>

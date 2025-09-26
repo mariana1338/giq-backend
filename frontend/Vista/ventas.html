@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ventas</title>
+  <link rel="stylesheet" href="/frontend/estilos/ventas.css">
+  <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <button class="back" id="btnBack">&#8592;</button>
+            <h2 class="header-title">Gestión de movimientos</h2>
+        </div>
+        <div class="header-right">
+            <span class="alert">Ventas</span>
+        </div>
+    </header>
+
+
+  <div class="search-bar">
+    <input type="text" id="buscar" placeholder="Buscar producto vendido">
+    <button class="btn">Buscar</button>
+    <button class="btn crear-btn" id="btnCrear">+ Crear Venta</button>
+  </div>
+
+  <!-- Tabla de ventas -->
+  <main>
+    <table class="tabla-ventas">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad Vendida</th>
+          <th>Precio Unitario</th>
+          <th>Total</th>
+          <th>movimiento</th>
+        </tr>
+      </thead>
+      <tbody id="tablaBody">
+        <tr>
+          <td>Bisturí Quirúrgico</td>
+          <td>3</td>
+          <td>$170,000</td>
+          <td>$510,000</td>
+        </tr>
+      </tbody>
+      <tbody id="tablaBody">
+        <tr>
+          <td>Bisturí Quirúrgico</td>
+          <td>3</td>
+          <td>$170,000</td>
+          <td>$510,000</td>
+        </tr>
+      </tbody>
+      <tbody id="tablaBody">
+        <tr>
+          <td>Bisturí Quirúrgico</td>
+          <td>3</td>
+          <td>$170,000</td>
+          <td>$510,000</td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </main>
+
+  <!-- Modal Crear Venta -->
+  <div class="modal" id="modal">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2>Nueva Venta</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      <form id="ventaForm">
+        <label for="producto">Producto</label>
+        <select id="producto" required>
+          <option value="" disabled selected>Selecciona un producto</option>
+          <option value="Bisturí Quirúrgico" data-precio="170000">Bisturí Quirúrgico</option>
+          <option value="Pinzas Hemostáticas" data-precio="147000">Pinzas Hemostáticas</option>
+          <option value="Tijeras Quirúrgicas" data-precio="116400">Tijeras Quirúrgicas</option>
+          <option value="Separadores Quirúrgicos" data-precio="51960">Separadores Quirúrgicos</option>
+          <option value="Porta Agujas" data-precio="89800">Porta Agujas</option>
+        </select>
+
+        <label for="cantidad">Cantidad Vendida</label>
+        <input type="number" id="cantidad" min="1" required>
+
+         <label for="producto">Tipo de movimiento</label>
+        <select id="producto" required>
+          <option value="" disabled selected>Seleccionar tipo de movimiento</option>
+          <option value="Bisturí Quirúrgico" data-precio="170000">Bisturí Quirúrgico</option>
+          <option value="Pinzas Hemostáticas" data-precio="147000">Pinzas Hemostáticas</option>
+          <option value="Tijeras Quirúrgicas" data-precio="116400">Tijeras Quirúrgicas</option>
+          <option value="Separadores Quirúrgicos" data-precio="51960">Separadores Quirúrgicos</option>
+          <option value="Porta Agujas" data-precio="89800">Porta Agujas</option>
+        </select>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn cancelar" id="cancelar">Cancelar</button>
+          <button type="submit" class="btn crear">Agregar</button>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+
+  <script src="/frontend/js/ventas.js"></script>
+</body>
+</html>
