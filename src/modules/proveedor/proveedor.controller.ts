@@ -8,16 +8,24 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ProveedorService } from './proveedor.service';
 import { CreateProveedorDto } from './dto/create-proveedor.dto';
 import { UpdateProveedorDto } from './dto/update-proveedor.dto';
+import { AuthGuard } from '@nestjs/passport'; // Importa el Guard de JWT
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
+
+// Aplica el Guard de JWT y el Guard de Roles a todas las rutas de este controlador
+@UseGuards(AuthGuard('jwt'), RolesGuard) 
 @Controller('proveedor')
 export class ProveedorController {
   constructor(private readonly proveedorService: ProveedorService) {}
 
   @Post()
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async create(@Body() createProveedorDto: CreateProveedorDto) {
     try {
       return await this.proveedorService.create(createProveedorDto);
@@ -63,6 +71,7 @@ export class ProveedorController {
   }
 
   @Patch(':id')
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async update(
     @Param('id') id: string,
     @Body() updateProveedorDto: UpdateProveedorDto,
@@ -81,6 +90,7 @@ export class ProveedorController {
   }
 
   @Delete(':id')
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async remove(@Param('id') id: string) {
     try {
       await this.proveedorService.remove(+id);

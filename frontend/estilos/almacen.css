@@ -61,6 +61,12 @@ h1 {
   width: 250px;
   text-align: left;
   position: relative;
+  display: flex;
+  flex-direction: column; /* Permite distribuir verticalmente */
+  min-height: 150px; /* Ajusta la altura fija o usa min-height si prefieres */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .card h3 {
@@ -80,7 +86,7 @@ h1 {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: auto;
 }
 
 .card-buttons button {
@@ -92,12 +98,12 @@ h1 {
 }
 
 .card-buttons .edit {
-  background: #ffc107;
+  background: #6ec1c7;
   color: #fff;
 }
 
 .card-buttons .edit:hover {
-  background: #e0a800;
+  background: #48bfc8;
 }
 
 .card-buttons .delete {

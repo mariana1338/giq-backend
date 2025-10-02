@@ -9,12 +9,15 @@ import {
   HttpStatus,
   HttpException,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { InstrumentoQuirurgicoService } from './instrumento-quirurgico.service';
 import { CreateInstrumentoQuirurgicoDto } from './dto/create-instrumento-quirurgico.dto';
 import { UpdateInstrumentoQuirurgicoDto } from './dto/update-instrumento-quirurgico.dto';
 import { AddStockDto } from './dto/add-stock.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt')) 
 @Controller('instrumentos-quirurgicos')
 export class InstrumentoQuirurgicoController {
   constructor(

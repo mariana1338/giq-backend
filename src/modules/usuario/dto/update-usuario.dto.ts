@@ -36,7 +36,7 @@ export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @MinLength(8, {
     message: 'La contraseña debe tener al menos $constraint1 caracteres.',
   })
-  contraseña?: string;
+  password?: string;
 
   @IsOptional()
   @IsString({ message: 'El rol debe ser una cadena de texto.' })

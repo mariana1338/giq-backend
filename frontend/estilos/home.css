@@ -31,18 +31,18 @@ body{
 .top-left{
   display:flex;
   align-items:center;
-  gap:20px;
 }
 
 /* logo — tamaño grande ajustable */
 .top-logo img{
-  width:80%;      /* ajusta aquí el tamaño */
-  
+  width:130%;      /* ajusta aquí el tamaño */
   object-fit:contain;
   display:block;
   margin:0;
   transition:transform .14s ease;
+  max-width: 200px;
 }
+.img:hover{ transform:translateY(-4px) }
 .top-logo img:hover{ transform:translateY(-4px) }
 
 /* texto de bienvenida: la JS debe envolver letras en spans para la interacción */

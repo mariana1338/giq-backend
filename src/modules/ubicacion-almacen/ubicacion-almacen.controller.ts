@@ -8,10 +8,17 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UbicacionAlmacenService } from './ubicacion-almacen.service';
 import { CreateUbicacionAlmacenDto } from './dto/create-ubicacion-almacen.dto';
 import { UpdateUbicacionAlmacenDto } from './dto/update-ubicacion-almacen.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+
 
 @Controller('ubicacion-almacen')
 export class UbicacionAlmacenController {
@@ -20,6 +27,7 @@ export class UbicacionAlmacenController {
   ) {}
 
   @Post()
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async create(@Body() createUbicacionAlmacenDto: CreateUbicacionAlmacenDto) {
     try {
       return await this.ubicacionAlmacenService.create(
@@ -67,6 +75,7 @@ export class UbicacionAlmacenController {
   }
 
   @Patch(':id')
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async update(
     @Param('id') id: string,
     @Body() updateUbicacionAlmacenDto: UpdateUbicacionAlmacenDto,
@@ -88,6 +97,7 @@ export class UbicacionAlmacenController {
   }
 
   @Delete(':id')
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async remove(@Param('id') id: string) {
     try {
       await this.ubicacionAlmacenService.remove(+id);

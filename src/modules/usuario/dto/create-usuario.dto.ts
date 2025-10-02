@@ -14,13 +14,6 @@ export class CreateUsuarioDto {
   })
   nombre: string;
 
-  @IsString({ message: 'El apellido debe ser una cadena de texto.' })
-  @IsNotEmpty({ message: 'El apellido no puede estar vacío.' })
-  @MaxLength(100, {
-    message: 'El apellido no puede tener más de $constraint1 caracteres.',
-  })
-  apellido: string;
-
   @IsEmail({}, { message: 'El correo electrónico no es válido.' })
   @IsNotEmpty({ message: 'El correo electrónico no puede estar vacío.' })
   @MaxLength(255, {
@@ -34,7 +27,7 @@ export class CreateUsuarioDto {
   @MinLength(8, {
     message: 'La contraseña debe tener al menos $constraint1 caracteres.',
   })
-  contraseña: string;
+  password: string;
 
   @IsString({ message: 'El rol debe ser una cadena de texto.' })
   @IsNotEmpty({ message: 'El rol no puede estar vacío.' })

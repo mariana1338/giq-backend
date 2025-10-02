@@ -9,9 +9,6 @@ export class CategoriaInstrumento {
   @Column({ unique: true, length: 100 })
   nombre: string;
 
-  @Column('text', { nullable: true })
-  descripcion: string;
-
   // Relación One-to-Many con InstrumentoQuirurgico: Una categoría puede tener muchos instrumentos.
   @OneToMany(
     () => InstrumentoQuirurgico,

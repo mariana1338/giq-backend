@@ -15,6 +15,10 @@ export class CreateInstrumentoQuirurgicoDto {
   nombre: string;
 
   @IsString()
+  @IsNotEmpty({ message: 'El código del instrumento no puede estar vacío.' })
+  codigo: string; 
+
+  @IsString()
   @IsOptional()
   descripcion?: string;
 

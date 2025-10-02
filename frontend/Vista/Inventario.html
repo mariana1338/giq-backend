@@ -137,7 +137,6 @@
         </div>
     </main>
 
-    <!-- Modal Crear Producto -->
     <div class="modal" id="modalCrear">
         <div class="modal-contenido">
             <div class="modal-header">
@@ -152,20 +151,23 @@
                 <label for="codigo">Código</label>
                 <input type="text" id="codigo" required>
 
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" rows="2"></textarea> 
+
                 <div style="display:flex; gap:10px;">
                     <div style="flex:1;">
-                        <label for="cantidad">Cantidad</label>
+                        <label for="cantidad">Cantidad (Stock)</label>
                         <input type="number" id="cantidad" required>
                     </div>
                     <div style="flex:1;">
-                        <label for="minimo">Cantidad Mínima</label>
+                        <label for="minimo">Stock Mínimo</label>
                         <input type="number" id="minimo" required>
                     </div>
                 </div>
 
                 <div style="display:flex; gap:10px;">
                     <div style="flex:1;">
-                        <label for="precioEntrada">Precio de Entrada</label>
+                        <label for="precioEntrada">Precio de Entrada (Unitario)</label>
                         <input type="number" id="precioEntrada" required>
                     </div>
                     <div style="flex:1;">
@@ -173,25 +175,24 @@
                         <input type="number" id="precioVenta" required>
                     </div>
                 </div>
+                
+                <label for="fechaAdquisicion">Fecha de Adquisición</label>
+                <input type="date" id="fechaAdquisicion">
 
-                <!-- Menú desplegable de Categoría -->
                 <label for="categoria">Categoría</label>
                 <select id="categoria" required>
                     <option value=""> Selecciona una categoría </option>
-                    <option value="corte">Instrumentos de Corte</option>
-                    <option value="pinzas">Pinzas</option>
-                    <option value="separadores">Separadores</option>
-                    <option value="suturas">Suturas</option>
-                </select>
+                    </select>
 
-                <!-- Menú desplegable de Proveedor -->
                 <label for="proveedor">Proveedor</label>
                 <select id="proveedor" required>
                     <option value=""> Selecciona un proveedor </option>
-                    <option value="proveedor1">Proveedor 1</option>
-                    <option value="proveedor2">Proveedor 2</option>
-                    <option value="proveedor3">Proveedor 3</option>
-                </select>
+                    </select>
+
+                <label for="ubicacion">Ubicación</label>
+                <select id="ubicacion" required>
+                    <option value=""> Selecciona una ubicación </option>
+                    </select>
 
                 <div class="modal-footer">
                     <button type="button" class="btn cancelar" id="cancelarModal">Cancelar</button>
@@ -200,7 +201,27 @@
             </form>
         </div>
     </div>
-
-    <script src="/frontend/js/invetario.js"></script>
+    <div id="modalDetalles" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" id="cerrarDetalles">&times;</span>
+            <h2 class="title-detalles">Detalles del Instrumento</h2>
+            <div id="detallesContainer" class="details-container">
+                <p>Nombre:</p> <strong id="detail-nombre"></strong>
+                <p>Código:</p> <span id="detail-codigo"></span>
+                <p>Descripción:</p> <span id="detail-descripcion"></span>
+                <p>Categoría:</p> <span id="detail-categoria"></span>
+                <p>Proveedor:</p> <span id="detail-proveedor"></span>
+                <p>Ubicación:</p> <span id="detail-ubicacion"></span>
+                <p>Stock Actual:</p> <span id="detail-stock"></span>
+                <p>Stock Mínimo:</p> <span id="detail-minimo"></span>
+                <p>Precio Unitario (Costo):</p> <span id="detail-costo"></span>
+                <p>Precio de Venta:</p> <span id="detail-venta"></span>
+                <p>Fecha Adquisición:</p> <span id="detail-fecha"></span>
+            </div>
+            <button id="btnEditarDesdeDetalles" class="btn primary-btn" style="margin-top: 20px;">Editar</button>
+        </div>
+    </div>
+    <script src="/frontend/js/api.service.js"></script>
+    <script src="/frontend/js/invetario.js"></script> 
 </body>
 </html>

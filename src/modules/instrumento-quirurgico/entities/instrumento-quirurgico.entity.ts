@@ -21,6 +21,9 @@ export class InstrumentoQuirurgico {
   @Column()
   nombre: string;
 
+  @Column()
+  codigo: string;
+
   @Column({ nullable: true })
   descripcion: string;
 

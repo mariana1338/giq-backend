@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #f4f7f9; /* Fondo gris claro */
+    background: #f4f7f9;
     color: #333;
     padding: 20px;
 }
@@ -19,12 +19,12 @@ main {
 
 /* --- Encabezado --- */
 .header {
-   position: fixed;      /* Fija la barra arriba */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 1000;        /* Asegura que esté sobre el contenido */
+    z-index: 1000;
     display:flex;
     align-items:center;
     gap:16px;
@@ -81,10 +81,7 @@ main {
     display: flex;
     gap: 10px;
     margin-bottom: 0px;
-    display: flex;
-    gap: 10px;
-    margin-bottom: 0px;
-    padding: 70px 20px 16px 20px; /* Menos padding arriba y abajo */
+    padding: 70px 20px 16px 20px;
 }
 
 .search-bar input {
@@ -112,15 +109,28 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
-    
 }
 
 .card {
+    display: flex; 
+    flex-direction: column;
     background: white;
     padding: 15px;
     border: 1px solid #eee;
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.card:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .card.low-stock {
@@ -155,6 +165,7 @@ main {
     margin-bottom: 10px;
     background: #dfe6e9;
     color: #2d3436;
+    align-self: flex-start;
 }
 
 .item-info {
@@ -162,6 +173,8 @@ main {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 5px;
+    border-top: 1px dashed #f0f0f0;
+    padding-top: 5px;
 }
 
 .item-info p {
@@ -184,6 +197,8 @@ main {
     align-items: center;
     margin-top: 10px;
     font-size: 14px;
+    border-top: 1px dashed #f0f0f0;
+    padding-top: 5px;
 }
 
 .price-info span,
@@ -196,7 +211,8 @@ main {
 }
 
 .actions {
-    margin-top: 15px;
+    margin-top: auto;
+    padding-top: 10px;
     display: flex;
     justify-content: flex-end;
 }
@@ -208,23 +224,19 @@ main {
     padding: 5px 8px;
     cursor: pointer;
     font-size: 14px;
+    transition: background 0.2s, border-color 0.2s;
 }
 
-.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
+.actions button:hover {
+    background: #f4f4f4;
+    border-color: #a7cfd0;
 }
 
-.card:active {
-    transform: scale(0.95);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-/* --- Modal Crear Producto --- */
+/* --- Modal Base (Crear/Editar/Detalles) --- */
 .modal {
     display: none;
     position: fixed;
-    z-index: 2000; /* más alto que header */
+    z-index: 2000;
     inset: 0;
     background: rgba(0,0,0,0.4);
     justify-content: center;
@@ -255,14 +267,14 @@ main {
     color: #333;
 }
 
-.close {
+.close-button {
     cursor: pointer;
     font-size: 20px;
     font-weight: bold;
-    color: #999;
+    color: #000000;
 }
 
-.close:hover {
+.close-button:hover {
     color: #333;
 }
 
@@ -278,15 +290,7 @@ main {
     color: #555;
 }
 
-.modal input {
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
-/* --- Estilos para menús desplegables --- */
+.modal input,
 .modal select {
     width: 100%;
     padding: 8px;
@@ -295,8 +299,12 @@ main {
     font-size: 14px;
     background: #fff;
     color: #333;
+}
+
+/* --- Estilos específicos para SELECT --- */
+.modal select {
     cursor: pointer;
-    appearance: none; /* elimina estilo nativo */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -306,11 +314,6 @@ main {
     border-color: #6ec1c7;
     box-shadow: 0 0 4px rgba(110, 193, 199, 0.6);
     outline: none;
-}
-
-.modal option {
-    padding: 8px;
-    font-size: 14px;
 }
 
 .modal-footer {
@@ -333,16 +336,23 @@ main {
     color: #333;
 }
 
-.modal-footer .btn.crear {
+.modal-footer .btn.crear,
+#btnEditarDesdeDetalles {
     background: #6ec1c7;
     color: white;
+    transition: background 0.2s;
 }
 
-/* formulario editar */
+.modal-footer .btn.crear:hover,
+#btnEditarDesdeDetalles:hover {
+    background: #4ea3a8;
+}
+
+/* formulario editar (Se mantiene) */
 .editar {
     display: none;
     position: fixed;
-    z-index: 2000; /* más alto que header */
+    z-index: 2000;
     inset: 0;
     background: rgba(0,0,0,0.4);
     justify-content: center;
@@ -352,4 +362,76 @@ main {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------- */
+/* --- VISTA DE DETALLES DEL PRODUCTO (Estilo Tarjeta) --- */
+/* ------------------------------------------------------------- */
+
+#modalDetalles .modal-contenido {
+    max-width: 550px; 
+    padding: 25px;
+}
+
+.details-container {
+    /* Estilo Tarjeta */
+    background: #fcfcfc; 
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    
+    /* Grid */
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 5px 15px;
+    margin-top: 15px;
+}
+
+.title-detalles {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Estilo para las etiquetas (Párrafos) y valores (Strong/Span) */
+.details-container p, 
+.details-container strong,
+.details-container span {
+    padding: 8px 0; /* Espaciado interno */
+    margin: 0;
+    text-align: left;
+}
+
+.details-container p {
+    font-weight: 500;
+    color: #555;
+    text-align: right;
+}
+
+/* Separadores de línea para cada fila de información */
+.details-container > * {
+    border-top: 1px dashed #f0f0f0; 
+}
+
+/* Remover el separador de la primera fila */
+.details-container p:nth-child(1),
+.details-container strong:nth-child(2),
+.details-container span:nth-child(2) {
+    border-top: none;
+}
+
+/* Resaltar el nombre */
+.details-container #detail-nombre {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #6ec1c7;
+}
+
+/* Botón de edición dentro del modal de detalles */
+#btnEditarDesdeDetalles {
+    width: 100%;
+    margin-top: 20px;
 }

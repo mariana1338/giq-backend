@@ -8,10 +8,16 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriaInstrumentoService } from './categoria-instrumento.service';
 import { CreateCategoriaInstrumentoDto } from './dto/create-categoria-instrumento.dto';
 import { UpdateCategoriaInstrumentoDto } from './dto/update-categoria-instrumento.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 
 @Controller('categoria-instrumento')
 export class CategoriaInstrumentoController {
@@ -20,6 +26,7 @@ export class CategoriaInstrumentoController {
   ) {}
 
   @Post()
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async create(
     @Body() createCategoriaInstrumentoDto: CreateCategoriaInstrumentoDto,
   ) {
@@ -54,6 +61,7 @@ export class CategoriaInstrumentoController {
   }
 
   @Get(':id')
+  
   async findOne(@Param('id') id: string) {
     try {
       return await this.categoriaInstrumentoService.findOne(+id);
@@ -69,6 +77,7 @@ export class CategoriaInstrumentoController {
   }
 
   @Patch(':id')
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async update(
     @Param('id') id: string,
     @Body() updateCategoriaInstrumentoDto: UpdateCategoriaInstrumentoDto,
@@ -90,6 +99,7 @@ export class CategoriaInstrumentoController {
   }
 
   @Delete(':id')
+  @Roles('administrador') // ⬅️ ¡SOLO ADMINISTRADORES AQUÍ!
   async remove(@Param('id') id: string) {
     try {
       await this.categoriaInstrumentoService.remove(+id);

@@ -15,15 +15,13 @@ export class Usuario {
 
   @Column({ nullable: false })
   nombre: string;
-
-  @Column({ nullable: false })
-  apellido: string;
+  
 
   @Column({ unique: true, nullable: false })
   correo: string;
 
-  @Column({ nullable: false })
-  contraseña: string;
+  @Column({ nullable: false, select: false }) // ⬅️ OPTIONAL: Añade select: false para más seguridad
+  password: string; // ⬅️ CAMBIADO DE 'contraseña' A 'password'
 
   @Column({ nullable: false })
   rol: string;

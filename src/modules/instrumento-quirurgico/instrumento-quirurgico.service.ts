@@ -1,4 +1,3 @@
-// src/modules/instrumento-quirurgico/instrumento-quirurgico.service.ts
 import {
   Injectable,
   HttpException,
@@ -131,12 +130,17 @@ export class InstrumentoQuirurgicoService {
   }
 
   async findAll(): Promise<InstrumentoQuirurgico[]> {
-    return await this.instrumentoRepository.find();
+    // ✅ CORRECCIÓN CLAVE: Cargar las relaciones para que el frontend vea el nombre de la categoría
+    return await this.instrumentoRepository.find({
+      relations: ['categoria', 'proveedor', 'ubicacion'],
+    });
   }
 
   async findOne(id: number): Promise<InstrumentoQuirurgico> {
+    // ✅ CORRECCIÓN: Cargar las relaciones también para findOne (necesario para la edición)
     const instrumento = await this.instrumentoRepository.findOne({
       where: { id_instrumento: id },
+      relations: ['categoria', 'proveedor', 'ubicacion'],
     });
     if (!instrumento) {
       throw new HttpException(

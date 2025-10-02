@@ -7,5 +7,5 @@ export class CreateUbicacionAlmacenDto {
 
   @IsString()
   @IsOptional()
-  descripcion?: string;
+  ubicacion?: string;
 }

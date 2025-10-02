@@ -20,6 +20,7 @@ import { UbicacionAlmacen } from './modules/ubicacion-almacen/entities/ubicacion
 import { CategoriaInstrumento } from './modules/categoria-instrumento/entities/categoria-instrumento.entity';
 import { Notificacion } from './modules/notificacion/entities/notificacion.entity';
 import { MovimientoInventario } from './modules/movimiento/entities/movimiento.entity'; // 💡 Importa la nueva entidad
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { MovimientoInventario } from './modules/movimiento/entities/movimiento.e
     CategoriaInstrumentoModule,
     NotificacionModule,
     MovimientoModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

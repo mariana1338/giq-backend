@@ -10,10 +10,13 @@ import {
   NotFoundException,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { NotificacionService } from './notificacion.service';
 import { CreateNotificacionDto } from './dto/create-notificacion.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt')) 
 @Controller('notificaciones')
 export class NotificacionController {
   constructor(private readonly notificacionService: NotificacionService) {}

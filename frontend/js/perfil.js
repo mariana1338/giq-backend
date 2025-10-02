@@ -41,6 +41,6 @@
     });
 
     logoutBtn.addEventListener('click', () => {
-        window.location.href = '/Vista/login.html'; 
+        window.location.href = '/'; 
     });
 })();

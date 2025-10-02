@@ -11,7 +11,7 @@ export class UbicacionAlmacen {
   nombre: string; // Ej: "Estante A1", "Cajón 3", "Sala de Esterilización"
 
   @Column('text', { nullable: true })
-  descripcion: string;
+  ubicacion: string;
 
   // Relación One-to-Many con InstrumentoQuirurgico: Una ubicación puede contener muchos instrumentos.
   @OneToMany(
