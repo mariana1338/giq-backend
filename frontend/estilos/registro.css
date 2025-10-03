@@ -97,7 +97,7 @@ body {
     transition: color 0.2s;
 }
 .input-group .toggle-password:hover {
-    color: #4ea3a8; 
+    color: #27888b; 
 }
 
 /* 🔹 NUEVO: estilos para el select de Rol */
@@ -131,7 +131,7 @@ body {
 
 .register-btn {
     width: 100%;
-    background: #6ec1c7;
+    background: #27888b;
     color: #fff;
     border: none;
     border-radius: 0.8rem;
@@ -151,7 +151,7 @@ body {
     font-size: 1rem;
 }
 .login-link a {
-    color: #6ec1c7;
+    color: #27888b;
     text-decoration: none;
     font-weight: 500;
 }

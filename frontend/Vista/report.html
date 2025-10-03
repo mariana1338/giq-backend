@@ -5,8 +5,10 @@
     <title>Reportes</title>
     <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/frontend/estilos/reportes.css">
-    <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+    <link rel="icon" type="image/png" href="/frontend/img/LogoG.I.Q.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
+
 <body>
     <header class="topbar">
         <button class="back" onclick="history.back()">←</button>
@@ -15,88 +17,64 @@
         </div>
     </header>
     <div class="container">
-        <div class="block filters">
-            <div class="row">
-                <div>
-                    <label>Fecha Desde</label>
-                    <input type="date">
+        <div id="reporteContainer"> 
+            
+            <div class="block filters">
+                <div class="row">
+                    <div>
+                        <label>Fecha Desde</label>
+                        <input type="date" id="inputFechaDesde"> 
+                    </div>
+                    <div>
+                        <label>Fecha Hasta</label>
+                        <input type="date" id="inputFechaHasta">
+                    </div>
+                    <div>
+                        <label>Tipo de Movimiento</label>
+                        <select id="selectTipoMovimiento">
+                            <option value="todos">Todos</option>
+                            <option value="entrada">Entrada</option>
+                            <option value="salida">Salida</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Producto</label>
+                        <input type="text" id="inputProducto" placeholder="Buscar producto...">
+                    </div>
                 </div>
-                <div>
-                    <label>Fecha Hasta</label>
-                    <input type="date">
-                </div>
-                <div>
-                    <label>Tipo de Movimiento</label>
-                    <select>
-                        <option>Todos</option>
-                        <option>Entrada</option>
-                        <option>Salida</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Producto</label>
-                    <input type="text" placeholder="Buscar producto...">
+                <div class="actions">
+                    <button id="btnAplicarFiltros">Aplicar Filtros</button>
+                    <button class="clear-btn" id="btnLimpiarFiltros">Limpiar</button>
                 </div>
             </div>
-            <div class="actions">
-                <button>Aplicar Filtros</button>
-                <button class="clear-btn">Limpiar</button>
+            
+            <div class="block history">
+                <h2>Historial de Movimientos</h2>
+                <p>Registro detallado de entradas y salidas de inventario</p>
+                <table id="tablaHistorial">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaHistorialBody"> 
+                        <tr><td colspan="5" style="text-align:center;">Use los filtros para cargar el historial.</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="block summary">
-            <div class="summary-card">
-                <h2>Valor Total</h2>
-                <div class="value">$ 7.964.000</div>
-                <div class="desc">Basado en 5 movimientos</div>
-            </div>
-            <div class="summary-card entradas">
-                <h2>Entradas</h2>
-                <div class="value">3</div>
-                <div class="desc">Movimientos de entrada</div>
-            </div>
-            <div class="summary-card salidas">
-                <h2>Salidas</h2>
-                <div class="value">2</div>
-                <div class="desc">Movimientos de salida</div>
-            </div>
-        </div>
+        
         <div class="block export">
             <span>Exportar Reporte</span>
-            <button>CSV</button>
-            <button>Excel</button>
-            <button>PDF</button>
-        </div>
-        <div class="block history">
-            <h2>Historial de Movimientos</h2>
-            <p>Registro detallado de entradas y salidas de inventario</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Producto</th>
-                        <th>Tipo</th>
-                        <th>Cantidad</th>
-                        <th>Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025-01-01</td>
-                        <td>Bisturí Quirúrgico</td>
-                        <td><span class="tipo-entrada">Entrada</span></td>
-                        <td>+50</td>
-                        <td class="valor-positivo">$ 3.100.000</td>
-                    </tr>
-                    <tr>
-                        <td>2025-01-02</td>
-                        <td>Pinzas Hemostáticas</td>
-                        <td><span class="tipo-salida">Salida</span></td>
-                        <td>-7</td>
-                        <td class="valor-negativo">$ -574.000</td>
-                    </tr>
-                </tbody>
-            </table>
+            <button id="btnExportarPDF">PDF</button> 
         </div>
     </div>
+    
+    <script src="/frontend/js/api.service.js"></script>
+    <script src="/frontend/js/reportes.js"></script> 
 </body>
 </html>

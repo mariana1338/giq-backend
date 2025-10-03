@@ -1,12 +1,99 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 :root{
-  --accent: #a6d0d1;
+  --accent: #27888b;
   --muted: #7b8a99;
   --card-bg: #fff;
   --border: rgba(166,214,212,0.45);
   --bg: #f4f7f9;
+  --ok: #16a34a;
+  --warn: #f59e0b;
+
+  /* NUEVO: mismo fondo para ambos contenedores */
+  --panel-bg: rgba(167,207,208,0.06);
 }
+
+/* Topbar de inventario (ABAJO) */
+.inventory-topbar{
+  width:100%;
+  background: var(--panel-bg);       /* <— antes: #fff */
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 6px 18px rgba(31,38,135,0.03);
+  padding:16px;
+
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:12px;
+}
+
+/* Cada pill ocupa su columna (ancho total), visual sobrio */
+.pill{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:12px 14px;
+  border-radius:999px;
+  font-size:14.5px;
+  line-height:1;
+  color:#0f2b30;
+  background:linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.04));
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.pill:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 2px 10px rgba(31,38,135,0.06), inset 0 1px 0 rgba(255,255,255,.7);
+  border-color: rgba(0,0,0,.09);
+}
+
+.pill i{ font-size:15px }
+.pill.success .dot{
+  width:11px; height:11px; border-radius:50%;
+  background:var(--ok);
+  box-shadow:0 0 0 3px rgba(22,163,74,0.15);
+  display:inline-block;
+}
+
+/* ——— Responsive: 2 columnas en tablet, 1 en móvil ——— */
+@media (max-width: 900px){
+  .inventory-topbar{
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    padding:14px;
+  }
+}
+@media (max-width: 560px){
+  .inventory-topbar{
+    grid-template-columns: 1fr;
+    gap:10px;
+    padding:12px;
+  }
+  .pill{
+    font-size:13.5px;
+    padding:10px 12px;
+  }
+}
+/* ===== Ajuste de posición y separación de la topbar ===== */
+.dashboard-content{
+  padding-top: 20px;                /* acerca todo a la cabecera */
+}
+
+.inventory-topbar{
+  margin-top: -39px;                /* súbela un poco */
+  margin-bottom: 60px;              /* más separación del INVENTARIO CRÍTICO */
+  /* si la quieres aún más arriba: prueba -18px o -20px */
+}
+
+/* Opcional: un pequeño respiro al título del inventario */
+.inventory-section .inventory-header{
+  margin-top: 2px;
+}
+
+
+
+/**/
 
 *{box-sizing:border-box}
 body{
@@ -88,7 +175,7 @@ body{
   padding: 0 6px;
 }
 
-/* barra de iconos arriba, con mismo largo */
+/* Barra de iconos (ARRIBA) */
 .nav-icons{
   width:100%;
   display:flex;
@@ -96,9 +183,10 @@ body{
   justify-content:space-around;
   gap:8px;
   padding:6px 12px;
-  background: rgba(167,207,208,0.06);
+  background: var(--panel-bg);      /* <— antes: rgba(167,207,208,0.06) */
   border: 1px solid var(--border);
-  border-radius:10px;
+  border-radius: 14px;               /* igual que abajo */
+  box-shadow:0 6px 18px rgba(31,38,135,0.03);
 }
 
 /* enlaces/iconos */

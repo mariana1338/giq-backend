@@ -48,7 +48,7 @@ main {
 }
 
 .back:hover {
-  color: #4ea3a8;
+  color: #27888b;
 }
 
 .header-title {
@@ -87,7 +87,7 @@ main {
 
 .btn {
   padding: 10px 15px;
-  background: #A7CFD0;
+  background: #27888b;
   color: white;
   border: none;
   border-radius: 8px;
@@ -199,7 +199,7 @@ main {
 }
 
 .modal-footer .btn.crear {
-  background: #6ec1c7;
+  background: #27888b;
   color: white;
 }
 

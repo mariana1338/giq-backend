@@ -114,7 +114,7 @@ body {
 
 .login-btn {
     width: 100%;
-    background: #6ec1c7;
+    background: #27888b;
     color: #fff;
     border: none;
     border-radius: 0.8rem;
@@ -137,7 +137,7 @@ body {
 }
 
 .register-link a {
-    color: #6ec1c7;
+    color: #27888b;
     text-decoration: none;
     font-weight: 500;
 }

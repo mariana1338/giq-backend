@@ -2,8 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 :root{
-    --accent: #A7CFD0;
-    --bg: linear-gradient(135deg,#f8fbfc 0%,#e6f1f4 100%);
+    --accent: #27888b;
+    --bg: linear-gradient(135deg,#478ca3 0%,#e6f1f4 100%);
     --card-bg: #fff;
     --muted: #7b8a99;
     --border: #d6e6ea;

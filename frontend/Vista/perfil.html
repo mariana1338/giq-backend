@@ -1,90 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Mi Perfil | G.I.Q</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/frontend/estilos/perfil.css">
-    <link rel="icon" type="image/png" href="/img/logo_sinfondo (1).png">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title></title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/estilos/perfil.css">
+  <link rel="icon" type="image/png" href="/frontend/img/LogoG.I.Q.png">
 </head>
 <body>
-    <header class="topbar">
-        <button class="back" onclick="history.back()">←</button>
-        <div class="top-title">
-            <h1>Mi Perfil</h1>
+  <header class="topbar">
+    <button class="back" onclick="history.back()">←</button>
+    <div class="top-title">
+      <h1>Mi Perfil</h1>
+    </div>
+  </header>
+
+  <main class="profile-wrap">
+    <aside class="profile-card">
+      <h2 class="name" id="sideNombre">Nombre de Muestra</h2>
+      <div class="email" id="sideCorreo">correo@ejemplo.com</div>
+      <span class="role" id="sideRol">—</span>
+
+      <ul class="meta">
+        <li><strong>ID Usuario:</strong> <span id="metaUserId">—</span></li>
+        <li><strong>Estado:</strong> Activo</li>
+      </ul>
+    </aside>
+
+    <section class="info-card">
+      <div class="info-header">
+        <h3>Información de Acceso</h3>
+        <div class="info-actions">
+          <button id="editBtn" class="btn small">✎ Editar</button>
         </div>
-    </header>
+      </div>
 
-    <main class="profile-wrap">
-        <aside class="profile-card">
-            <div class="avatar">JH
-                <button class="avatar-btn" title="Cambiar foto">📷</button>
+      <form id="profileForm" class="info-form" autocomplete="off">
+        <div class="grid-2">
+          <label>
+            Nombre Completo
+            <input type="text" id="nombre" name="nombre" value="Nombre de Muestra" readonly>
+          </label>
+          <label>
+            Correo Electrónico
+            <input type="email" id="correo" name="correo" value="correo@ejemplo.com" readonly>
+          </label>
+        </div>
+
+        <div class="grid-2">
+          <label>
+            Rol
+            <select id="rol" name="rol" disabled>
+              <option value="">Selecciona un rol</option>
+              <option value="Administrador" selected>Administrador</option>
+              <option value="Operario">Operario</option>
+              <option value="Auditor">Auditor</option>
+              <option value="Invitado">Invitado</option>
+            </select>
+          </label>
+          <label>
+            Contraseña
+            <div class="password-wrap">
+              <input type="password" id="contrasena" name="contrasena" value="********" readonly>
+              <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar u ocultar contraseña"></button>
             </div>
-            <h2 class="name">Juan Diego</h2>
-            <div class="email">Juandidog18@gmail.com</div>
-            <span class="role">Administrador</span>
+          </label>
+        </div>
 
-            <ul class="meta">
-                <li><strong>Departamento:</strong> Gestión de Inventario</li>
-                <li><strong>Fecha de ingreso:</strong> Enero 2024</li>
-            </ul>
-        </aside>
-
-        <section class="info-card">
-            <div class="info-header">
-                <h3>Información Personal</h3>
-                <div class="info-actions">
-                    <button id="editBtn" class="btn small">✎ Editar</button>
-                </div>
-            </div>
-
-            <form id="profileForm" class="info-form" autocomplete="off">
-                <div class="grid-2">
-                    <label>
-                        Nombre Completo
-                        <input type="text" id="nombre" value="Juan Diego Hurtado" readonly>
-                    </label>
-                    <label>
-                        Correo Electrónico
-                        <input type="email" id="correo" value="juan.hurtado@gigq.com" readonly>
-                    </label>
-                </div>
-
-                <div class="grid-2">
-                    <label>
-                        Número de Documento
-                        <input type="text" id="documento" value="1234567890" readonly>
-                    </label>
-                    <label>
-                        Teléfono
-                        <input type="tel" id="telefono" value="+57 300 123 4567" readonly>
-                    </label>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" id="logoutBtn" class="btn primary">Cerrar Sesión</button>
-                </div>
-            </form>
-        </section>
-
-        <section class="stats-row">
-            <div class="stat">
-                <div class="stat-number">47</div>
-                <div class="stat-label">Productos Creados</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">23</div>
-                <div class="stat-label">Reportes Generados</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">156</div>
-                <div class="stat-label">Movimientos Registrados</div>
-            </div>
-        </section>
-    </main>
-    <script src="/frontend/js/perfil.js"></script>
-
-
+        <div class="form-actions">
+          <button type="button" id="logoutBtn" class="btn">Cerrar Sesión</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="/frontend/js/api.service.js"></script> 
+  <script src="/frontend/js/perfil.js"></script>
 </body>
 </html>

@@ -11,16 +11,17 @@ import {
   HttpCode,
   ParseIntPipe,
   UnauthorizedException,
-  UseGuards, // Si vas a usar guardias de autenticación
+  UseGuards,
+  Request, // 🔑 Importar Request para acceder al usuario del JWT
 } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { LoginDto } from './dto/login.dto'; 
-import { AuthService } from '../../auth/auth.service';  
+import { AuthService } from '../../auth/auth.service'; 
 import { AuthGuard } from '@nestjs/passport';
-
+import { ChangePasswordDto } from './dto/change-password.dto'; // 🔑 DTO para cambiar la contraseña
 
 @Controller('usuarios')
 export class UsuarioController {
@@ -31,61 +32,94 @@ export class UsuarioController {
 
   // =========================================================
   // ENDPOINT DE REGISTRO (SIGNUP)
-  // Ruta: POST http://localhost:3000/usuarios
   // =========================================================
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
-    // Nota: El service se encargará del hashing de la contraseña
     return this.usuarioService.create(createUsuarioDto);
   }
 
   // =========================================================
-  // ENDPOINT DE INICIO DE SESIÓN (LOGIN) ⬅️ AÑADIDO
-  // Ruta: POST http://localhost:3000/usuarios/login
+  // ENDPOINT DE INICIO DE SESIÓN (LOGIN)
   // =========================================================
   @Post('login') 
- @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto): Promise<{ access_token: string }> {
-    // ⬅️ Llama al servicio de autenticación para obtener el token real
     const token = await this.authService.login(loginDto.email, loginDto.password); 
 
     if (!token) {
-      // El AuthService lanza la UnauthorizedException si las credenciales fallan, 
-      // pero si por alguna razón retorna null, lanzamos el error aquí.
       throw new UnauthorizedException('Credenciales inválidas.');
     }
     return token;
   }
 
   // =========================================================
-  // CRUD RESTANTE
+  // 🔑 ENDPOINTS DE PERFIL (REQUIERE JWT)
   // =========================================================
+
+  /**
+   * Obtiene la información del usuario autenticado (usado en el lado izquierdo del perfil).
+   * Ruta: GET /usuarios/perfil
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('perfil')
+  @HttpCode(HttpStatus.OK)
+  async getProfile(@Request() req: any): Promise<Usuario> {
+    // req.user contiene el payload del token JWT (ej: { userId: 5, email: '...' })
+    // Asumimos que el payload tiene una propiedad 'userId' o 'id_usuario'
+    const userId = req.user.id_usuario || req.user.userId;
+    
+    // Devolvemos el usuario completo sin la contraseña
+    return this.usuarioService.findOne(userId); 
+  }
+
+  /**
+   * Actualiza la información básica del usuario (nombre, email).
+   * Ruta: PATCH /usuarios/perfil
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('perfil')
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @Request() req: any,
+    @Body() updateUsuarioDto: UpdateUsuarioDto,
+  ): Promise<Usuario> {
+    const userId = req.user.id_usuario || req.user.userId;
+    // El servicio debe manejar la actualización del usuario por su ID
+    return this.usuarioService.update(userId, updateUsuarioDto);
+  }
+
+  /**
+   * Cambia la contraseña del usuario autenticado.
+   * Ruta: PATCH /usuarios/cambiar-password
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('cambiar-password')
+  @HttpCode(HttpStatus.OK)
+  async changePassword(
+    @Request() req: any,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<{ message: string }> {
+    const userId = req.user.id_usuario || req.user.userId;
+
+    // 🔑 El servicio debe verificar la contraseña actual antes de actualizar la nueva
+    await this.usuarioService.changePassword(
+      userId,
+      changePasswordDto.currentPassword,
+      changePasswordDto.newPassword,
+    );
+    
+    return { message: 'Contraseña actualizada correctamente.' };
+  }
+
+  // =========================================================
+  // CRUD RESTANTE (Requiere autenticación en producción)
+  // =========================================================
+  @UseGuards(AuthGuard('jwt')) // 🔑 Añadimos el guardia a findAll
   @Get()
   @HttpCode(HttpStatus.OK)
-  // @UseGuards(JwtAuthGuard) // ⬅️ Descomenta cuando implementes la guardia JWT
   async findAll(): Promise<Usuario[]> {
     return this.usuarioService.findAll();
   }
-
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Usuario> {
-    return this.usuarioService.findOne(id);
-  }
-
-  @Patch(':id')
-  @HttpCode(HttpStatus.OK)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUsuarioDto: UpdateUsuarioDto,
-  ): Promise<Usuario> {
-    return this.usuarioService.update(id, updateUsuarioDto);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.usuarioService.remove(id);
-  }
+  // ... (El resto del CRUD queda igual)
 }

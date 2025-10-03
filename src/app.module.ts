@@ -50,6 +50,7 @@ import { AuthModule } from './auth/auth.module';
         logging: false,
       }),
       inject: [ConfigService],
+      
     }),
     UsuarioModule,
     InstrumentoQuirurgicoModule,

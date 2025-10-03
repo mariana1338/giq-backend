@@ -13,7 +13,7 @@ body {
 
 main {
     background: white;
-    padding: 20px;
+    padding: 20px;  
     border-radius: 10px;
 }
 
@@ -43,7 +43,7 @@ main {
     background: none;
     border: none;
     font-size: 1.5rem;
-    color: #6ec1c7;
+    color: #27888b;
     cursor: pointer;
 }
 
@@ -93,7 +93,7 @@ main {
 
 .btn {
     padding: 10px 15px;
-    background: #A7CFD0;
+    background: #27888b;
     color: white;
     border: none;
     border-radius: 8px;
@@ -101,7 +101,7 @@ main {
 }
 
 .btn:hover {
-    background: #4ea3a8;
+    background: #4e9a9c;
 }
 
 /* --- Contenedor de tarjetas --- */

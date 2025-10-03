@@ -1,3 +1,5 @@
+// src/modules/instrumento-quirurgico/instrumento-quirurgico.service.ts
+
 import {
   Injectable,
   HttpException,
@@ -5,14 +7,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { InstrumentoQuirurgico } from './entities/instrumento-quirurgico.entity';
 import { CreateInstrumentoQuirurgicoDto } from './dto/create-instrumento-quirurgico.dto';
 import { UpdateInstrumentoQuirurgicoDto } from './dto/update-instrumento-quirurgico.dto';
 import { CategoriaInstrumento } from '../categoria-instrumento/entities/categoria-instrumento.entity';
 import { Proveedor } from '../proveedor/entities/proveedor.entity';
 import { UbicacionAlmacen } from '../ubicacion-almacen/entities/ubicacion-almacen.entity';
-import { NotificacionService } from '../notificacion/notificacion.service';
+import { NotificacionService } from '../notificacion/notificacion.service'; 
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { MovimientoInventario } from '../movimiento/entities/movimiento.entity';
 import { AddStockDto } from './dto/add-stock.dto';
@@ -32,9 +34,13 @@ export class InstrumentoQuirurgicoService {
     private readonly usuarioRepository: Repository<Usuario>,
     @InjectRepository(MovimientoInventario)
     private readonly movimientoRepository: Repository<MovimientoInventario>,
+    // 🔑 Inyección del servicio de notificaciones
     private readonly notificacionService: NotificacionService,
   ) {}
 
+  // ------------------------------------------------------------------
+  // CREACIÓN
+  // ------------------------------------------------------------------
   async create(
     createInstrumentoQuirurgicoDto: CreateInstrumentoQuirurgicoDto,
   ): Promise<InstrumentoQuirurgico> {
@@ -129,18 +135,26 @@ export class InstrumentoQuirurgicoService {
     }
   }
 
-  async findAll(): Promise<InstrumentoQuirurgico[]> {
-    // ✅ CORRECCIÓN CLAVE: Cargar las relaciones para que el frontend vea el nombre de la categoría
+  // ------------------------------------------------------------------
+  // LECTURA (con Filtro)
+  // ------------------------------------------------------------------
+  async findAll(nombre?: string): Promise<InstrumentoQuirurgico[]> {
+    const whereCondition: any = {};
+
+    if (nombre) {
+      whereCondition.nombre = Like(`%${nombre}%`);
+    }
+
     return await this.instrumentoRepository.find({
+      where: whereCondition,
       relations: ['categoria', 'proveedor', 'ubicacion'],
     });
   }
 
   async findOne(id: number): Promise<InstrumentoQuirurgico> {
-    // ✅ CORRECCIÓN: Cargar las relaciones también para findOne (necesario para la edición)
     const instrumento = await this.instrumentoRepository.findOne({
       where: { id_instrumento: id },
-      relations: ['categoria', 'proveedor', 'ubicacion'],
+      relations: ['categoria', 'proveedor', 'ubicacion'], // Asegura la carga de relaciones
     });
     if (!instrumento) {
       throw new HttpException(
@@ -151,6 +165,9 @@ export class InstrumentoQuirurgicoService {
     return instrumento;
   }
 
+  // ------------------------------------------------------------------
+  // ACTUALIZACIÓN (Update)
+  // ------------------------------------------------------------------
   async update(
     id: number,
     updateInstrumentoQuirurgicoDto: UpdateInstrumentoQuirurgicoDto,
@@ -164,60 +181,24 @@ export class InstrumentoQuirurgicoService {
       );
     }
 
-    if (
-      updateInstrumentoQuirurgicoDto.cantidadStock !== undefined &&
-      updateInstrumentoQuirurgicoDto.cantidadStock <=
-        instrumento.cantidadStockMinima
-    ) {
-      const mensaje = `¡Alerta de Stock Bajo! El instrumento ${instrumento.nombre} tiene solo ${updateInstrumentoQuirurgicoDto.cantidadStock} unidades.`;
-
-      const usuarioAdmin = await this.usuarioRepository.findOne({
-        where: { rol: 'admin' },
-      });
-
-      if (usuarioAdmin) {
-        await this.notificacionService.crearNotificacion({
-          mensaje: mensaje,
-          id_usuario: usuarioAdmin.id_usuario,
-          id_instrumento: instrumento.id_instrumento,
-        });
-      }
-    }
-
+    // 1. Fusionar y guardar los datos actualizados
     this.instrumentoRepository.merge(
       instrumento,
       updateInstrumentoQuirurgicoDto,
     );
-    return await this.instrumentoRepository.save(instrumento);
+    const instrumentoActualizado = await this.instrumentoRepository.save(
+      instrumento,
+    );
+
+    // 2. 🔑 VERIFICAR ALERTA DE STOCK BAJO después de la actualización
+    await this.verificarYCrearAlerta(instrumentoActualizado);
+
+    return instrumentoActualizado;
   }
 
-  async remove(id: number): Promise<boolean> {
-    const instrumento = await this.instrumentoRepository.findOne({
-      where: { id_instrumento: id },
-    });
-
-    if (!instrumento) {
-      throw new HttpException(
-        `Instrumento con ID ${id} no encontrado.`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    await this.movimientoRepository.delete({
-      instrumento: { id_instrumento: instrumento.id_instrumento },
-    });
-
-    const result = await this.instrumentoRepository.delete(id);
-
-    if (result.affected === 0) {
-      throw new HttpException(
-        `Instrumento con ID ${id} no encontrado para eliminar.`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return true;
-  }
-
+  // ------------------------------------------------------------------
+  // ACTUALIZACIÓN DE STOCK (addStock)
+  // ------------------------------------------------------------------
   async addStock(
     id: number,
     addStockDto: AddStockDto,
@@ -273,6 +254,76 @@ export class InstrumentoQuirurgicoService {
 
     await this.movimientoRepository.save(movimiento);
 
+    // 🔑 VERIFICAR ALERTA DE STOCK BAJO después de la operación de stock
+    await this.verificarYCrearAlerta(instrumentoActualizado);
+
     return instrumentoActualizado;
+  }
+
+  // ------------------------------------------------------------------
+  // ELIMINACIÓN
+  // ------------------------------------------------------------------
+  async remove(id: number): Promise<boolean> {
+    const instrumento = await this.instrumentoRepository.findOne({
+      where: { id_instrumento: id },
+    });
+
+    if (!instrumento) {
+      throw new HttpException(
+        `Instrumento con ID ${id} no encontrado.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // Eliminar movimientos relacionados antes de eliminar el instrumento (para mantener integridad)
+    await this.movimientoRepository.delete({
+      instrumento: { id_instrumento: instrumento.id_instrumento },
+    });
+
+    const result = await this.instrumentoRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new HttpException(
+        `Instrumento con ID ${id} no encontrado para eliminar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return true;
+  }
+
+  // ------------------------------------------------------------------
+  // 🔑 LÓGICA DE NOTIFICACIONES (Función Reutilizable)
+  // ------------------------------------------------------------------
+  /**
+   * Verifica si el stock actual está por debajo o igual al mínimo y crea una alerta si es necesario.
+   * Previene la creación de alertas duplicadas (busca una alerta "no leída" activa).
+   */
+  private async verificarYCrearAlerta(
+    instrumento: InstrumentoQuirurgico,
+  ): Promise<void> {
+    if (instrumento.cantidadStock <= instrumento.cantidadStockMinima) {
+      // 1. Buscar un usuario administrador para asignarle la notificación
+      const usuarioAdmin = await this.usuarioRepository.findOne({
+        where: { rol: 'admin' },
+      });
+
+      if (usuarioAdmin) {
+        // 2. Prevenir alertas duplicadas: buscar una alerta activa (no leída) para este instrumento
+        const alertaExistente = await this.notificacionService.findAlertaActiva(
+          instrumento.id_instrumento,
+        );
+
+        if (!alertaExistente) {
+          const mensaje = `¡Alerta de Stock Bajo! El instrumento ${instrumento.nombre} (Cód: ${instrumento.codigo}) tiene solo ${instrumento.cantidadStock} unidades. Mínimo requerido: ${instrumento.cantidadStockMinima}.`;
+
+          // 3. Crear la nueva notificación
+          await this.notificacionService.crearNotificacion({
+            mensaje: mensaje,
+            id_usuario: usuarioAdmin.id_usuario,
+            id_instrumento: instrumento.id_instrumento,
+          });
+        }
+      }
+    }
   }
 }

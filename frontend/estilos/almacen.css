@@ -1,3 +1,10 @@
+/* ===== Reset para evitar desbordes por padding/border ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: #f5f7f8;
@@ -31,7 +38,7 @@ h1 {
 }
 
 .btn-container button {
-  background: #6ec1c7;
+  background: #27888b;
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
@@ -45,28 +52,75 @@ h1 {
   background: #5aaeb3;
 }
 
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
+/* ===== Columnas por tipo ===== */
+.sections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  gap: 18px;
   padding: 20px;
+  align-items: start;
 }
 
+@media (max-width: 980px) {
+  .sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column {
+  background: #fff;
+  border: 1px solid #e7ecef;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(31,38,135,0.04);
+  padding: 12px;
+  text-align: left;
+
+  /* 👇 Impide que el contenido (sombra o ancho) “se salga” visualmente */
+  overflow: hidden;
+}
+
+.column-title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.column-title.proveedor { background: #ffffff; color: #27888b; }
+.column-title.categoria { background: #ffffff; color: #27888b; }
+.column-title.almacen   { background: #ffffff; color: #27888b; }
+
+.column-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+
+  /* 👇 Un “cojín” para que las tarjetas no toquen el borde redondeado */
+  padding: 2px;
+}
+
+/* ===== Tarjeta ===== */
 .card {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   padding: 15px;
-  width: 250px;
+
+  /* 👇 Nunca exceder el ancho disponible de su columna */
+  width: 100%;
+  max-width: 100%;
+
   text-align: left;
   position: relative;
   display: flex;
-  flex-direction: column; /* Permite distribuir verticalmente */
-  min-height: 150px; /* Ajusta la altura fija o usa min-height si prefieres */
+  flex-direction: column;
+  min-height: 150px;
   word-break: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
+  overflow-wrap: anywhere; /* evita desbordes con textos largos */
+  border: 1px solid #eef2f4;
 }
 
 .card h3 {
@@ -81,7 +135,7 @@ h1 {
   color: #666;
 }
 
-/* Botones dentro de la tarjeta */
+/* Botones de la tarjeta */
 .card-buttons {
   display: flex;
   justify-content: flex-end;
@@ -115,7 +169,7 @@ h1 {
   background: #c82333;
 }
 
-/* --- Modal --- */
+/* ===== Modal ===== */
 .modal {
   display: none;
   position: fixed;
@@ -134,9 +188,7 @@ h1 {
   text-align: left;
 }
 
-.modal-content h2 {
-  margin-top: 0;
-}
+.modal-content h2 { margin-top: 0; }
 
 .modal-content input {
   width: 100%;

@@ -3,7 +3,7 @@
 :root{
     --bg: linear-gradient(135deg,#f8fbfc 0%,#e6f1f4 100%);
     --card-bg: #fff;
-    --accent: #A7CFD0;
+    --accent: #27888b;
     --muted:#7b8a99;
     --border:#d6e6ea;
 }
@@ -127,3 +127,19 @@ body{
         gap: 12px;
     }
 }
+
+/* Extensiones mínimas */
+.info-form select{
+  width:100%;padding:10px;border:1px solid #e9f1f1;border-radius:8px;background:#fbfeff;
+  margin-top:6px;font-size:0.96rem;color:#222;outline:none;
+}
+.info-form select:disabled{background:#fbfbfb;color:#8a8f91}
+
+.password-wrap{position:relative; display:flex; align-items:center; gap:8px}
+.password-wrap .toggle-pass{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  border:none; background:transparent; cursor:pointer; font-size:16px; opacity:.7;
+}
+.password-wrap .toggle-pass:hover{opacity:1}
+
+

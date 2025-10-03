@@ -1,20 +1,26 @@
-:root{
-    --accent: #6ec1c7;
-    --accent-weak: rgba(110,193,199,0.10);
-    --accent-border: rgba(110,193,199,0.22);
-    --text-muted: #6b7280;
+:root {
+  --accent: #27888b;
+  --accent-weak: rgba(110, 193, 199, 0.1);
+  --accent-border: rgba(110, 193, 199, 0.22);
+  --text-muted: #6b7280;
+  /* ✅ Definido para que el borde de la topbar funcione */
+  --border: rgba(16, 24, 40, 0.08);
 }
   
-.topbar{
-    top: 0;
-    position: fixed;
-    width: 100%;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    padding:18px 32px;
-    background:#fff;
-    border-bottom:1px solid var(--border);
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0; /* ✅ ocupa todo el ancho */
+  width: 100%;
+  z-index: 9999; /* ✅ se mantiene por encima */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+  background: #fff; /* ✅ fondo sólido (no “transparente”) */
+  border-bottom: 1px solid var(--border);
+  box-shadow: none; /* sombra solo al scrollear (con .is-scrolled) */
 }
 .topbar .back{
     background:none;
@@ -364,4 +370,58 @@ h1 {
 @media (max-width: 900px) {
     .summary { flex-direction: column; gap: 14px; }
     .filters .row { gap: 12px; grid-template-columns: 1fr; }
+}
+
+/* Añade esto al final de tu archivo /frontend/estilos/reportes.css */
+
+@media print {
+    /* Oculta lo que es interactivo o de navegación */
+    .topbar, .filters, .export, .back {
+        display: none !important;
+    }
+
+    /* Ajusta el cuerpo y contenedor para un formato de página limpio */
+    body {
+        background: #fff !important; /* Fondo blanco */
+        padding: 0 !important; 
+        margin: 0 !important;
+    }
+    
+    .container {
+        /* Fuerza la limpieza de bordes y sombras en el PDF */
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important; 
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        /* Asegura que la tabla no se salga de los límites */
+        overflow: visible !important; 
+    }
+
+    .block {
+        /* Quita fondos y sombras de los bloques */
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    /* Mejora la visibilidad de la tabla en un entorno monocromo */
+    .history table {
+        border: 1px solid #fffbfb; /* Un borde claro para el contorno */
+    }
+    .history th, .history td {
+        padding: 8px 10px; /* Ajusta el padding para la impresión */
+    }
+    .history th {
+        background: #ffffff !important; /* Fondo gris claro para los encabezados */
+        -webkit-print-color-adjust: exact; /* Fuerza a Chrome a imprimir el color */
+        color-adjust: exact;
+    }
+    
+    /* Asegura que los badges de tipo se vean (color de fondo exacto) */
+    .tipo-entrada, .tipo-salida {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
 }

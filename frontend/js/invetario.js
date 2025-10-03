@@ -15,6 +15,8 @@ const selectUbicacion = document.getElementById('ubicacion');
 const btnCrearProducto = document.getElementById('btnCrear');
 const btnCerrarModal = document.getElementById('cerrarModal');
 const btnCancelarModal = document.getElementById('cancelarModal');
+const searchInput = document.getElementById('search-input');
+const searchButton = document.getElementById('search-btn');
 
 // Modal de Detalles (Nuevos elementos)
 const modalDetalles = document.getElementById('modalDetalles');
@@ -161,28 +163,52 @@ function createProductCard(data) {
 // D. CARGA INICIAL DE INSTRUMENTOS (READ)
 // -----------------------------------------------------------------
 
-async function cargarInstrumentos() {
-    // ... (Esta función permanece igual) ...
-    cardsContainer.innerHTML = '<div style="text-align: center; width: 100%;">Cargando inventario...</div>';
-    
-    try {
-        const respuesta = await apiFetch('/instrumentos-quirurgicos', { method: 'GET' });
-        const instrumentos = respuesta.data;
-        
-        cardsContainer.innerHTML = ''; 
+/**
+ * Carga y renderiza los instrumentos, aplicando un filtro de búsqueda opcional.
+ * @param {string} [nombreFiltro=''] - El nombre a buscar.
+ */
+async function cargarInstrumentos(nombreFiltro = '') { 
+    // Muestra el mensaje de carga inmediatamente
+    cardsContainer.innerHTML = '<div style="text-align: center; width: 100%;">Cargando inventario...</div>';
+    
+    let url = '/instrumentos-quirurgicos';
 
-        if (instrumentos && instrumentos.length > 0) {
-            instrumentos.forEach(createProductCard); 
-        } else {
-            cardsContainer.innerHTML = '<div style="text-align: center; width: 100%;">No hay instrumentos.</div>';
-        }
-
-    } catch (error) {
-        console.error("Error al cargar instrumentos:", error.message);
-        cardsContainer.innerHTML = `<div style="color: red; text-align: center; width: 100%;">
-            Error al cargar inventario: ${error.message}. Asegúrate de que tu backend esté activo.
-        </div>`;
+    // 1. Construir la URL con el filtro si existe
+    if (nombreFiltro) {
+        url += `?nombre=${encodeURIComponent(nombreFiltro)}`;
     }
+    
+    try {
+        // 2. Intentar la llamada a la API
+        const respuesta = await apiFetch(url, { method: 'GET' });
+        const instrumentos = respuesta.data;
+        
+        // 3. Limpiar el contenedor
+        cardsContainer.innerHTML = ''; 
+
+        // 4. Verificar datos y renderizar
+        if (Array.isArray(instrumentos) && instrumentos.length > 0) { 
+            instrumentos.forEach(createProductCard); 
+        } else {
+            cardsContainer.innerHTML = `<div style="text-align: center; width: 100%;">
+                ${nombreFiltro 
+                    ? 'No se encontraron instrumentos que coincidan con la búsqueda.' 
+                    : 'No hay instrumentos registrados. Crea el primero.'}
+            </div>`;
+        }
+
+    } catch (error) {
+        // 5. Manejo de errores de conexión/API
+        console.error("Error fatal al cargar instrumentos:", error.message, error); 
+        
+        const errorMsg = error.response?.message?.join(', ') || error.message || 'Verifica la conexión del backend.';
+
+        cardsContainer.innerHTML = `<div style="color: #dc3545; text-align: center; width: 100%; padding: 20px; border: 1px solid #dc3545; background-color: #f8d7da; border-radius: 5px;">
+            ❌ **ERROR AL CARGAR INVENTARIO** ❌<br>
+            Asegúrate de que tu backend (NestJS) esté corriendo y que estés logueado.<br>
+            Detalle: <strong>${errorMsg}</strong>
+        </div>`;
+    }
 }
 
 
@@ -294,7 +320,6 @@ async function handleEliminarProducto(e) {
 
     try {
         await apiFetch(`/instrumentos-quirurgicos/${id}`, { method: 'DELETE' });
-        
         if (cardElement) {
             cardElement.remove(); 
         }
@@ -303,7 +328,7 @@ async function handleEliminarProducto(e) {
         
     } catch (error) {
         console.error("Error al eliminar instrumento:", error.message);
-        alert(`❌ Error al eliminar instrumento: ${error.message}`);
+        alert(`Error al eliminar instrumento: ${error.message}`);
     }
 }
 
@@ -371,6 +396,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Conectar el handler unificado de Creación/Edición
     formProducto?.addEventListener('submit', handleGuardarProducto);
 
+    // -----------------------------------------------------------------
+    // NUEVOS EVENTOS: BÚSQUEDA
+    // -----------------------------------------------------------------
+    if (searchButton && searchInput) {
+        // Al hacer click en el botón de búsqueda
+        searchButton.addEventListener('click', () => {
+            const nombre = searchInput.value.trim();
+            // Llama a la función modificada con el filtro
+            cargarInstrumentos(nombre); 
+        });
+
+        // Al presionar ENTER en el campo de texto
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                const nombre = searchInput.value.trim();
+                // Llama a la función modificada con el filtro
+                cargarInstrumentos(nombre); 
+            }
+        });
+    }
     // Iniciar la carga de datos
     cargarDatosRelacionados(); 
     cargarInstrumentos();      
